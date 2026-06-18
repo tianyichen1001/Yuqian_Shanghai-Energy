@@ -1,0 +1,249 @@
+# -----------------------------------------------------------------------------
+# config/archetypes.yaml
+# Canonical list of 14 archetypes used throughout the pipeline.
+# Names are lowercase snake_case and must match exactly across modules.
+#
+# Twelve public-building archetypes follow the Wang et al. (2026) Shanghai
+# monitoring-platform taxonomy. Two residential archetypes follow Tsinghua /
+# GB/T 51161-2016. "mixed_use" (综合) is a first-class archetype — Wang et al.
+# report ~22.5 % of monitored floor area falls under this category.
+#
+# All numeric defaults are placeholders. Fill from GB 50189, DGJ32, and
+# Wang et al. clustering — do NOT invent values.
+# -----------------------------------------------------------------------------
+
+# Global parameters shared across archetypes.
+# floor_count_cutoff splits residential archetypes by the Chinese fire-safety
+# definition of "high-rise residential" (高层住宅): a residential building of
+# 10 storeys or more, per GB 50016-2014 and GB 50352-2019.
+globals:
+  floor_count_cutoff: 10   # residential_mid_rise: levels <= 9
+                           # residential_high_rise: levels >= 10
+
+archetypes:
+
+  # ----- Public, twelve categories -------------------------------------------
+  government_office:
+    label_cn: "党政机关办公"
+    category: "public"
+    typical_floors:        # TODO from Taobao height distribution per cluster
+      low: null
+      mid: null
+      high: null
+    wwr:                   # window-to-wall ratio, four orientations
+      n: null
+      e: null
+      s: null
+      w: null
+    floor_height_m: null
+    occupancy_density_m2_per_person: null
+    lpd_w_per_m2: null      # GB 50189 reference, TODO
+    epd_w_per_m2: null      # equipment power density, TODO
+    hvac_type: null         # e.g., VAV, FCU+DOAS, VRF — TODO from clustering
+    schedule_set: "government_office"
+    notes: "Public-sector administrative office buildings."
+
+  office:
+    label_cn: "办公"
+    category: "public"
+    typical_floors: { low: null, mid: null, high: null }
+    wwr: { n: null, e: null, s: null, w: null }
+    floor_height_m: null
+    occupancy_density_m2_per_person: null
+    lpd_w_per_m2: null
+    epd_w_per_m2: null
+    hvac_type: null
+    schedule_set: "office"
+    notes: "Generic commercial office."
+
+  hotel:
+    label_cn: "宾馆饭店"
+    category: "public"
+    typical_floors: { low: null, mid: null, high: null }
+    wwr: { n: null, e: null, s: null, w: null }
+    floor_height_m: null
+    occupancy_density_m2_per_person: null
+    lpd_w_per_m2: null
+    epd_w_per_m2: null
+    hvac_type: null
+    schedule_set: "hotel"
+    notes: "Hotels and guesthouses. Mostly 24/7 occupancy."
+
+  shopping_mall:
+    label_cn: "商场"
+    category: "public"
+    typical_floors: { low: null, mid: null, high: null }
+    wwr: { n: null, e: null, s: null, w: null }
+    floor_height_m: null
+    occupancy_density_m2_per_person: null
+    lpd_w_per_m2: null
+    epd_w_per_m2: null
+    hvac_type: null
+    schedule_set: "retail"
+    notes: "Department stores and shopping centers."
+
+  healthcare:
+    label_cn: "医疗卫生"
+    category: "public"
+    typical_floors: { low: null, mid: null, high: null }
+    wwr: { n: null, e: null, s: null, w: null }
+    floor_height_m: null
+    occupancy_density_m2_per_person: null
+    lpd_w_per_m2: null
+    epd_w_per_m2: null
+    hvac_type: null
+    schedule_set: "hospital"
+    notes: "Hospitals and clinics."
+
+  education:
+    label_cn: "教育"
+    category: "public"
+    typical_floors: { low: null, mid: null, high: null }
+    wwr: { n: null, e: null, s: null, w: null }
+    floor_height_m: null
+    occupancy_density_m2_per_person: null
+    lpd_w_per_m2: null
+    epd_w_per_m2: null
+    hvac_type: null
+    schedule_set: "education"
+    notes: "Schools and universities (excluding dormitories)."
+
+  sports:
+    label_cn: "体育"
+    category: "public"
+    typical_floors: { low: null, mid: null, high: null }
+    wwr: { n: null, e: null, s: null, w: null }
+    floor_height_m: null
+    occupancy_density_m2_per_person: null
+    lpd_w_per_m2: null
+    epd_w_per_m2: null
+    hvac_type: null
+    schedule_set: "sports"
+    notes: "Gyms, stadiums, indoor arenas."
+
+  culture:
+    label_cn: "文化"
+    category: "public"
+    typical_floors: { low: null, mid: null, high: null }
+    wwr: { n: null, e: null, s: null, w: null }
+    floor_height_m: null
+    occupancy_density_m2_per_person: null
+    lpd_w_per_m2: null
+    epd_w_per_m2: null
+    hvac_type: null
+    schedule_set: "culture"
+    notes: "Museums, libraries, theatres."
+
+  transportation:
+    label_cn: "交通"
+    category: "public"
+    typical_floors: { low: null, mid: null, high: null }
+    wwr: { n: null, e: null, s: null, w: null }
+    floor_height_m: null
+    occupancy_density_m2_per_person: null
+    lpd_w_per_m2: null
+    epd_w_per_m2: null
+    hvac_type: null
+    schedule_set: "transportation"
+    notes: "Airport, rail, and bus terminals."
+
+  exhibition:
+    label_cn: "会展"
+    category: "public"
+    typical_floors: { low: null, mid: null, high: null }
+    wwr: { n: null, e: null, s: null, w: null }
+    floor_height_m: null
+    occupancy_density_m2_per_person: null
+    lpd_w_per_m2: null
+    epd_w_per_m2: null
+    hvac_type: null
+    schedule_set: "exhibition"
+    notes: "Convention centers and exhibition halls."
+
+  mixed_use:
+    label_cn: "综合"
+    category: "public"
+    # First-class archetype. ~22.5 % of Wang et al. monitored floor area.
+    # Modeled as a vertical composite: a retail podium occupying the first 1–3
+    # storeys plus an office / hotel tower above. Wang et al. report monthly
+    # EUI for "综合建筑" closer to office than to pure retail, so the tower
+    # share dominates annual energy — but the podium drives summer cooling
+    # peaks via large open atria and longer occupancy hours.
+    #
+    # Both sub-components are simulated as separate thermal zones inside one
+    # building model; their schedules, HVAC, and internal gains are
+    # parameterized independently — do NOT collapse this to a single archetype.
+    schedule_set: "mixed_use"
+    podium:
+      function: "retail"
+      floors_range: [1, 3]      # podium occupies storeys 1–3 by default
+      typical_floors: null      # TODO from Taobao mixed-use cluster
+      wwr: { n: null, e: null, s: null, w: null }
+      floor_height_m: null      # podium retail typically 4.5–6 m
+      occupancy_density_m2_per_person: null
+      lpd_w_per_m2: null
+      epd_w_per_m2: null
+      hvac_type: "central_vav_all_air"   # centralized VAV with full all-air
+                                         # system (集中 VAV + 全空气), reflects
+                                         # typical Shanghai mall podium design
+      schedule_set: "retail"
+      notes: "Retail podium. Atrium and circulation drive cooling load."
+    tower:
+      function: "office"
+      floors_range: [4, null]   # tower from storey 4 upward (null = top)
+      typical_floors: null      # TODO from Taobao mixed-use cluster
+      wwr: { n: null, e: null, s: null, w: null }
+      floor_height_m: null      # office tower typically 3.6–4.2 m
+      occupancy_density_m2_per_person: null
+      lpd_w_per_m2: null
+      epd_w_per_m2: null
+      hvac_type: "central_vav"  # centralized VAV (集中 VAV), the dominant
+                                # topology in Shanghai Class-A office towers
+      schedule_set: "office"
+      notes: "Office (or hotel) tower above podium."
+
+  other_public:
+    label_cn: "其他公共"
+    category: "public"
+    typical_floors: { low: null, mid: null, high: null }
+    wwr: { n: null, e: null, s: null, w: null }
+    floor_height_m: null
+    occupancy_density_m2_per_person: null
+    lpd_w_per_m2: null
+    epd_w_per_m2: null
+    hvac_type: null
+    schedule_set: "other_public"
+    notes: "Public buildings not covered by the eleven categories above."
+
+  # ----- Residential, two categories -----------------------------------------
+  # Residential mid- vs high-rise split follows the Chinese fire-safety
+  # definition of "高层住宅" in GB 50016-2014 and GB 50352-2019: residential
+  # buildings of 10 storeys or more. Threshold is set globally above
+  # (globals.floor_count_cutoff = 10) so it stays in one place.
+  residential_high_rise:
+    label_cn: "高层住宅"
+    category: "residential"
+    floors_min: 10          # levels >= globals.floor_count_cutoff
+    floors_max: null
+    floor_height_m: null
+    wwr: { n: null, e: null, s: null, w: null }
+    occupancy_density_m2_per_person: null
+    lpd_w_per_m2: null
+    epd_w_per_m2: null
+    hvac_type: null         # split AC vs central — TODO from Shanghai survey
+    schedule_set: "residential"
+    notes: "High-rise residential, GB/T 51161 reference. Levels >= 10."
+
+  residential_mid_rise:
+    label_cn: "多层住宅"
+    category: "residential"
+    floors_min: null        # 1–9; lower bound TODO (typical Shanghai stock 4–9)
+    floors_max: 9           # levels <= globals.floor_count_cutoff - 1
+    floor_height_m: null
+    wwr: { n: null, e: null, s: null, w: null }
+    occupancy_density_m2_per_person: null
+    lpd_w_per_m2: null
+    epd_w_per_m2: null
+    hvac_type: null
+    schedule_set: "residential"
+    notes: "Mid-rise / walk-up residential. Levels <= 9."

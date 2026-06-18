@@ -1,0 +1,54 @@
+# -----------------------------------------------------------------------------
+# config/shanghai.yaml
+# City-level configuration for the Shanghai UBEM pipeline.
+# All values are placeholders — fill in after the human review step.
+# -----------------------------------------------------------------------------
+
+city:
+  name: "Shanghai"
+  country: "China"
+  climate_zone: "hot_summer_cold_winter"   # GB 50176 climate zone label
+  timezone: "Asia/Shanghai"
+
+# -----------------------------------------------------------------------------
+# Coordinate reference systems
+# -----------------------------------------------------------------------------
+# All spatial joins are performed in WGS84 after the GCJ-02 → WGS84 fix is
+# applied to Taobao / Amap inputs (see src/buildings_shanghai/data/crs.py).
+# Area / distance computations use the projected CRS below.
+crs:
+  geographic: "EPSG:4326"          # WGS84 lat/lon
+  projected: "EPSG:32651"          # WGS84 / UTM zone 51N (Shanghai)
+  cgcs2000_utm: "EPSG:4547"        # CGCS2000 / 3-degree Gauss-Kruger CM 120E
+
+# -----------------------------------------------------------------------------
+# Weather files (gitignored; placed under weather/)
+# -----------------------------------------------------------------------------
+weather:
+  epw: "weather/CHN_SH_Shanghai.583620_CSWD.epw"   # TODO confirm exact filename
+  ddy: "weather/CHN_SH_Shanghai.583620_CSWD.ddy"
+  stat: "weather/CHN_SH_Shanghai.583620_CSWD.stat"
+
+# -----------------------------------------------------------------------------
+# Study area
+# -----------------------------------------------------------------------------
+# Full-city bounding box in WGS84. Sub-areas (districts) can be added below
+# for smoke-testing on a small footprint count.
+study_area:
+  full_city:
+    bbox: [120.85, 30.65, 122.20, 31.90]   # TODO verify exact extent
+  demo_areas:
+    xuhui:
+      bbox: [121.40, 31.15, 121.50, 31.25]   # TODO verify district extent
+    pudong_lujiazui:
+      bbox: [121.48, 31.22, 121.55, 31.27]   # TODO verify district extent
+
+# -----------------------------------------------------------------------------
+# Pipeline I/O roots (resolved relative to project root at runtime)
+# -----------------------------------------------------------------------------
+paths:
+  data_raw: "data/raw"
+  data_interim: "data/interim"
+  data_processed: "data/processed"
+  outputs: "outputs"
+  templates: "templates"

@@ -1,0 +1,32 @@
+# -----------------------------------------------------------------------------
+# config/poi_mapping.yaml
+#
+# THIS FILE MUST BE REVIEWED AND FILLED IN MANUALLY — DO NOT AUTO-POPULATE.
+#
+# Amap (Gaode) POI categories contain hundreds of sub-types with overlapping
+# semantics (e.g., "餐饮服务;中餐厅;综合酒楼" vs. "餐饮服务;中餐厅;特色/地方风味餐厅"
+# both belong to the same archetype, but "餐饮服务;茶艺馆" probably maps to
+# `culture` rather than `shopping_mall`). Bad mappings silently corrupt the
+# Module B training set and propagate downstream.
+#
+# Process:
+#   1. Run `scripts/run_module_a.py --generate-poi-candidates` to dump every
+#      distinct Amap "type" string that intersects at least one building
+#      polygon, with frequency counts.
+#   2. Open the candidate list and assign each row to one of the 14 archetypes
+#      defined in config/archetypes.yaml, or leave as `null` to drop.
+#   3. Paste the reviewed mapping into the `mappings` block below and commit.
+#
+# Each key is the Amap "type" string (semicolon-delimited). Each value is an
+# archetype name from config/archetypes.yaml, or `null` to exclude.
+# -----------------------------------------------------------------------------
+
+# Used by Module A to confirm this file has been reviewed.
+# Set to true ONLY after a human has filled in the mappings.
+reviewed: false
+
+mappings: {}   # TODO populate after human review
+
+# Optional: explicit drop list for noisy POI categories (parking lots, ATMs,
+# bus stops, etc.) that should never seed an archetype label.
+drop_categories: []   # TODO

@@ -1,0 +1,122 @@
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ---------------------------------------------------------------------------
+# Virtual environments
+# ---------------------------------------------------------------------------
+.env
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# ---------------------------------------------------------------------------
+# Testing / coverage / type checking
+# ---------------------------------------------------------------------------
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# ---------------------------------------------------------------------------
+# Jupyter
+# ---------------------------------------------------------------------------
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+profile_default/
+ipython_config.py
+
+# ---------------------------------------------------------------------------
+# IDEs and editors
+# ---------------------------------------------------------------------------
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ---------------------------------------------------------------------------
+# Project data (large, licensed, or regenerable)
+#
+# Anchor the rules with a leading slash so they only match the top-level
+# data/ and outputs/ directories — NOT src/buildings_shanghai/data/ etc.
+#
+# Ignore the *contents* of each data subdirectory (data/raw/*) rather than
+# the directory itself; git cannot re-include a file inside a directory
+# that is fully excluded, so the !data/raw/README.md exception below would
+# silently do nothing if we wrote `data/` instead of `data/raw/*`.
+# ---------------------------------------------------------------------------
+/data/raw/*
+/data/interim/*
+/data/processed/*
+/outputs/
+/weather/*.epw
+/weather/*.stat
+/weather/*.ddy
+
+# Keep the README explaining the raw-data layout
+!/data/raw/README.md
+
+# ---------------------------------------------------------------------------
+# EnergyPlus run artifacts
+# ---------------------------------------------------------------------------
+*.eso
+*.eio
+*.mtr
+*.rdd
+*.mdd
+*.audit
+*.bnd
+*.shd
+*.idf.err
+*.end
+*.err
+*.htm
+*.html
+*.dxf
+*.sql
+*.expidf
+eplusout.*
+sqlite.err
+
+# ---------------------------------------------------------------------------
+# Misc
+# ---------------------------------------------------------------------------
+*.log
+*.tmp
+.tmp/

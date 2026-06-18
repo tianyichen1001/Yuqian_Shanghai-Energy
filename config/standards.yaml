@@ -1,0 +1,73 @@
+# -----------------------------------------------------------------------------
+# config/standards.yaml
+# Reference values from Chinese energy codes used to parameterize archetypes.
+# All numbers are placeholders — fill from the cited code, do not invent.
+# -----------------------------------------------------------------------------
+
+# GB 50189-2015: Design standard for energy efficiency of public buildings.
+# Use for envelope U-values, LPD, EPD, fresh-air rates for public archetypes.
+gb_50189:
+  source: "GB 50189-2015 Design Standard for Energy Efficiency of Public Buildings"
+  climate_zone: "hot_summer_cold_winter"   # Section 3.1
+  envelope_u_value_w_m2k:
+    exterior_wall: null      # Table 3.3.1-2, TODO
+    roof: null               # Table 3.3.1-2, TODO
+    window: null             # Table 3.3.1-3, TODO
+    skylight: null           # TODO
+  shgc_window: null          # Table 3.3.1-3, TODO
+  lpd_w_per_m2:
+    office: null             # Table 4.3.2, TODO
+    hotel_guestroom: null    # TODO
+    retail: null             # TODO
+    hospital_ward: null      # TODO
+    classroom: null          # TODO
+  epd_w_per_m2:              # equipment power density, TODO
+    office: null
+    hotel: null
+    retail: null
+  fresh_air_m3_per_hour_per_person:   # Table 4.2.2 reference
+    office: null
+    hotel: null
+    retail: null
+    classroom: null
+
+# DGJ32 (J 71-2014, DGJ32/J 96-2010 etc.) — Jiangsu / Shanghai regional
+# supplements. Used where local values differ from the national standard.
+dgj32:
+  source: "DGJ32 series and Shanghai local supplements"
+  notes: >
+    Capture any envelope or HVAC parameter that the Shanghai local code
+    sets tighter than GB 50189. TODO populate from the latest revision.
+  envelope_u_value_w_m2k:
+    exterior_wall: null
+    roof: null
+    window: null
+  hvac_cop:
+    air_cooled_chiller: null
+    water_cooled_chiller: null
+    vrf: null
+
+# GB/T 51161-2016: Energy consumption indicators for civil buildings.
+# Provides annual EUI benchmarks for residential and public buildings.
+gb_t_51161:
+  source: "GB/T 51161-2016 Energy Consumption Indicators for Civil Buildings"
+  residential_annual_eui_kwh_m2:
+    high_rise: null          # Table 6.2.x, TODO
+    mid_rise: null           # TODO
+  public_annual_eui_kwh_m2:
+    office: null
+    hotel: null
+    retail: null
+    hospital: null
+
+# Internal-gain schedules: a pointer table to the per-archetype schedule
+# files under templates/schedules/ (created later in Module C).
+schedule_sets:
+  office: null               # templates/schedules/office.csv
+  retail: null
+  hospital: null
+  hotel: null
+  education: null
+  residential: null
+  mixed_use: null
+  # ... TODO for the remaining schedule sets

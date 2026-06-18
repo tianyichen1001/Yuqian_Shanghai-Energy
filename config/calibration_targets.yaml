@@ -1,0 +1,79 @@
+# -----------------------------------------------------------------------------
+# config/calibration_targets.yaml
+#
+# Ground truth for the dual-track NMBE calibration in Module E.
+# Do NOT modify these numbers to make the model pass — surface the gap instead.
+#
+# Track 1 (public buildings): the Wang et al. (2026) 144-point matrix —
+#   12 archetypes x 12 months of monthly electricity EUI [kWh/m2 / month].
+#   Target NMBE: |NMBE| <= 10 % per archetype, averaged across months.
+#
+# Track 2 (residential): annual EUI from Tsinghua Building Energy Annual
+#   Reports and GB/T 51161-2016. Target NMBE: |NMBE| <= 20 % annual.
+# -----------------------------------------------------------------------------
+
+source:
+  public: "Wang H. et al., Green Building, 2026(1). Shanghai building carbon emission smart monitoring platform."
+  residential:
+    - "Tsinghua Building Energy Annual Report, latest edition"
+    - "GB/T 51161-2016"
+    - "Shanghai Statistical Yearbook, latest edition"
+
+# Target thresholds (do not relax)
+targets:
+  public:
+    metric: "NMBE"
+    granularity: "monthly"
+    threshold_pct: 10
+  residential:
+    metric: "NMBE"
+    granularity: "annual"
+    threshold_pct: 20
+
+# -----------------------------------------------------------------------------
+# Track 1: Wang et al. 144-point matrix
+# rows  = 12 public archetypes (names must match config/archetypes.yaml)
+# cols  = months 1..12, values in kWh/m2 / month
+# -----------------------------------------------------------------------------
+public_monthly_eui_kwh_m2:
+  government_office: {1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null, 9: null, 10: null, 11: null, 12: null}
+  office:            {1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null, 9: null, 10: null, 11: null, 12: null}
+  hotel:             {1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null, 9: null, 10: null, 11: null, 12: null}
+  shopping_mall:     {1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null, 9: null, 10: null, 11: null, 12: null}
+  healthcare:        {1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null, 9: null, 10: null, 11: null, 12: null}
+  education:         {1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null, 9: null, 10: null, 11: null, 12: null}
+  sports:            {1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null, 9: null, 10: null, 11: null, 12: null}
+  culture:           {1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null, 9: null, 10: null, 11: null, 12: null}
+  transportation:    {1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null, 9: null, 10: null, 11: null, 12: null}
+  exhibition:        {1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null, 9: null, 10: null, 11: null, 12: null}
+  mixed_use:         {1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null, 9: null, 10: null, 11: null, 12: null}
+  other_public:      {1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null, 9: null, 10: null, 11: null, 12: null}
+
+# Optional: per-archetype floor-area share in the monitored sample (from
+# Wang et al.). Used to weight aggregate calibration metrics.
+public_floor_area_share_pct:
+  government_office: null
+  office: null
+  hotel: null
+  shopping_mall: null
+  healthcare: null
+  education: null
+  sports: null
+  culture: null
+  transportation: null
+  exhibition: null
+  mixed_use: 22.5         # Wang et al. reported figure; confirm exact value
+  other_public: null
+
+# -----------------------------------------------------------------------------
+# Track 2: residential annual benchmarks
+# -----------------------------------------------------------------------------
+residential_annual_eui_kwh_m2:
+  residential_high_rise:
+    value: null           # TODO from GB/T 51161 + Tsinghua
+    source: null
+    year: null
+  residential_mid_rise:
+    value: null
+    source: null
+    year: null
