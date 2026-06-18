@@ -1,0 +1,38 @@
+{
+    "name": "Buildings.Shanghai UBEM",
+    "image": "mcr.microsoft.com/devcontainers/python:3.11",
+    "hostRequirements": {
+        "cpus": 4,
+        "memory": "8gb",
+        "storage": "32gb"
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": true,
+            "configureZshAsDefaultShell": false
+        },
+        "ghcr.io/devcontainers/features/git:1": {}
+    },
+    "postCreateCommand": "bash .devcontainer/install_energyplus.sh && pip install --upgrade pip && pip install -e .[dev]",
+    "remoteEnv": {
+        "PYTHONPATH": "${containerWorkspaceFolder}/src"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "ms-toolsai.jupyter",
+                "tamasfe.even-better-toml",
+                "redhat.vscode-yaml"
+            ],
+            "settings": {
+                "python.defaultInterpreterPath": "/usr/local/bin/python",
+                "python.testing.pytestEnabled": true,
+                "python.testing.pytestArgs": ["tests"]
+            }
+        }
+    },
+    "forwardPorts": [8888],
+    "remoteUser": "vscode"
+}
