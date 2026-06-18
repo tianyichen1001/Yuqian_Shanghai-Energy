@@ -68,6 +68,21 @@ def test_scripts_present(rel_path: str) -> None:
     assert (PROJECT_ROOT / rel_path).is_file()
 
 
+def test_project_memory_present_and_readable() -> None:
+    """PROJECT_MEMORY.md must exist at the repo root and be non-empty.
+
+    Per ``CLAUDE.md`` §2 (Memory Protocol), this file is the first artifact
+    every new session reads. A missing or empty file is a workflow break.
+    """
+    path = PROJECT_ROOT / "PROJECT_MEMORY.md"
+    assert path.is_file(), "PROJECT_MEMORY.md is missing from the repo root"
+    content = path.read_text(encoding="utf-8")
+    assert content.strip(), "PROJECT_MEMORY.md exists but is empty"
+    assert "PROJECT_MEMORY" in content or "Project Status" in content, (
+        "PROJECT_MEMORY.md does not look like the expected memory file"
+    )
+
+
 def test_configs_parse_as_yaml() -> None:
     """The five config files are valid YAML (parseable, not necessarily complete)."""
     yaml = pytest.importorskip("yaml")
