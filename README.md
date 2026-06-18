@@ -55,7 +55,27 @@ The codebase is organized as five sequential modules. Each module reads from the
 
 ---
 
-## 3. Quick Start (GitHub Codespaces)
+## 3. Excel / Table Conventions
+
+All tabular artifacts (`.csv`, `.xlsx`, `.parquet`) follow a fixed home so
+contributors never have to guess where an Excel file belongs. Anything
+gitignored stays under `data/` or `outputs/`; nothing tabular goes loose at
+the repository root.
+
+| Table category | Location | Examples |
+|---|---|---|
+| External source tables (immutable, ingested as-is) | `data/raw/<source>/` | Wang et al. 144-point CSV → `data/raw/benchmark/`; Tsinghua residential benchmarks → `data/raw/benchmark/`; One Click LCA EPD export → `data/raw/epd_oneclick/` |
+| Pipeline intermediate tables (joined, cleaned, feature-engineered) | `data/interim/` | CRS-unified building × POI joins, ML feature tables, simulation input rosters |
+| Pipeline output tables (computed results) | `outputs/tables/` | Per-building EUI, end-use breakdown, embodied-carbon distributions, NMBE logs |
+| Paper-ready tables (final, formatted for publication) | `outputs/tables/paper/` | Table 1 (archetype summary), Table 2 (calibration NMBE per archetype × month), etc. |
+
+Each subdirectory is gitignored alongside the rest of `data/` and `outputs/`
+(see `.gitignore`). The convention is enforced by review, not by code —
+treat misplaced tables as a bug.
+
+---
+
+## 4. Quick Start (GitHub Codespaces)
 
 1. On the repository page, click `<> Code` → `Codespaces` → `Create codespace on main`.
 2. Wait approximately 5 minutes for the container to build. EnergyPlus 25.1, Python 3.11, and all required libraries install automatically based on `.devcontainer/devcontainer.json`.
@@ -75,7 +95,7 @@ The codebase is organized as five sequential modules. Each module reads from the
 
 ---
 
-## 4. Data Sources
+## 5. Data Sources
 
 | Type | Source | Access |
 |---|---|---|
@@ -94,7 +114,7 @@ Detailed acquisition instructions and file naming conventions are documented in 
 
 ---
 
-## 5. Calibration Targets
+## 6. Calibration Targets
 
 | Building category | Source | Granularity | Target NMBE |
 |---|---|---|---|
@@ -103,7 +123,7 @@ Detailed acquisition instructions and file naming conventions are documented in 
 
 ---
 
-## 6. Configuration
+## 7. Configuration
 
 All tunable parameters live under `config/`. To adapt this pipeline to another city (e.g., Nanjing), modify the YAML files without touching `src/`.
 
