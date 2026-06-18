@@ -12,9 +12,9 @@
 _Current phase, headline goal of the current sprint, and what counts as "done"
 for the active milestone. The owner updates this after each strategy session._
 
-- **Current phase:** _TODO — fill in after the next strategy session._
-- **Active milestone:** _TODO._
-- **Definition of done for this milestone:** _TODO._
+- **Current phase:** Pre-Module-A. Skeleton (PR #1) and workflow scaffolding (PR #2) merged to main on 2026-06-18. Awaiting data acquisition.
+- **Active milestone:** Module A — Data Acquisition. Collect 7 external data sources and place under `data/raw/` per `data/raw/README.md`, then produce a coverage-reported `outputs/geojson/master.geojson`.
+- **Definition of done for this milestone:** All 7 data sources committed (or noted in `data/raw/README.md` as acquired but gitignored), `config/poi_mapping.yaml` reviewed and filled, and one full Module A run produces `master.geojson` with documented coverage statistics (% labeled / % ML-predicted / % unknown / % height-complete).
 
 ---
 
@@ -26,7 +26,11 @@ line, and whether it has been encoded in the repo (commit / config / doc)._
 
 | Date | Decision | Rationale | Encoded in |
 |---|---|---|---|
-| _TODO_ | _TODO_ | _TODO_ | _TODO_ |
+| 2026-06-18 | Mixed-use modeled as podium retail + tower office vertical composite (not a single archetype) | Wang et al. 综合建筑 monthly EUI is closer to office than to pure retail; ~22.5% of monitored floor area justifies first-class treatment | `config/archetypes.yaml` mixed_use |
+| 2026-06-18 | Residential mid_rise vs high_rise cutoff set at 10 storeys | Aligns with GB 50016-2014 / GB 50352-2019 fire-safety definition of 高层住宅 | `config/archetypes.yaml` globals.floor_count_cutoff |
+| 2026-06-18 | Dual-track calibration: public buildings ±10% monthly NMBE, residential ±20% annual NMBE | Mirrors Lyu et al. 2026 mixed-precision approach; reflects the residential data availability gap | `config/calibration_targets.yaml` |
+| 2026-06-18 | Pure-Python IDF generation pipeline (eppy/geomeppy/honeybee-energy), no Rhino/Grasshopper | Reproducibility + batch scalability + removes licensing barrier for Chinese institutions | `pyproject.toml` runtime deps |
+| 2026-06-18 | Target journal: CEUS (Computers, Environment and Urban Systems) | Lyu et al. 2026 Buildings.city published there; familiar reviewer pool; tool-paper friendly venue | `CITATION.cff` references |
 
 ---
 
