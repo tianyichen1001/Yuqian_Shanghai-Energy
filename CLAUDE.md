@@ -42,6 +42,15 @@ claude.ai but the user is asking to proceed), **stop and report the
 conflict**. Do not pick a side on your own. The owner is the only authority
 that can reconcile claude.ai context with repo state.
 
+**Iron rule**: Re-read `PROJECT_MEMORY.md` before EVERY task execution, not
+only at session start. A session may span hours, and the owner may push
+updates to `PROJECT_MEMORY.md` mid-session from a parallel claude.ai
+conversation. Acting on stale memory is the leading cause of design drift.
+If the file has changed since the previous read in this session, briefly
+summarize the changed sections in the response before proceeding with the
+task. This rule has no exceptions, including for tasks that "seem trivial"
+or "involve no design judgment".
+
 ---
 
 ## 3. The Five Modules
