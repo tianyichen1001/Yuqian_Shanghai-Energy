@@ -26,12 +26,17 @@ references:
         given-names: "Y."
     title: "Buildings.city framework"
     journal: "Computers, Environment and Urban Systems"
+    volume: 128
+    number: "102453"
     year: 2026
   - type: article
     authors:
       - family-names: "Wang"
         given-names: "H."
     title: "Shanghai building carbon emission smart monitoring platform"
-    journal: "Green Building"
+    journal: "绿色建筑 / Green Building"
+    issue: "2026(1)"
+    start: 139
+    end: 143
     year: 2026
-    issue: "1"
+    doi: "10.13770/j.cnki.issn2095-705x.2023.12.007"
