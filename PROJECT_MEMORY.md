@@ -62,7 +62,7 @@ inputs Module A depends on._
 | Wang et al. 2026 monthly EUI (144 points) | _TODO_ | `data/raw/benchmark/wang_2026_public_monthly.csv` | _TODO_ |
 | Tsinghua residential annual benchmarks | _TODO_ | `data/raw/benchmark/` | _TODO_ |
 | One Click LCA China EPDs | _TODO_ | `data/raw/epd_oneclick/` | _TODO_ |
-| Shanghai EPW (TMY / CSWD) | _TODO_ | `weather/` | _TODO_ |
+| Shanghai EPW (TMY / CSWD) | ingested (CSWD + TMYx.2011-2025, station 583620 Baoshan) | `weather/` | 2026-06-20 |
 
 ---
 
