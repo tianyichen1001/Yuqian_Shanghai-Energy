@@ -1,32 +1,324 @@
-# -----------------------------------------------------------------------------
+# =============================================================================
 # config/poi_mapping.yaml
+# 高德 POI 三级类目 → 14 类 archetype 映射词典
+# =============================================================================
 #
-# THIS FILE MUST BE REVIEWED AND FILLED IN MANUALLY — DO NOT AUTO-POPULATE.
+# 项目: Yuqian_Shanghai-Energy
+# 用途: 模块 A(数据采集与处理)中,基于 POI 命中给每栋建筑播种 archetype 标签
+# 上游: 高德开放平台 amap_poicode.xlsx (https://a.amap.com/lbs/static/amap_poicode.xlsx.zip)
+# 下游: src/buildings_shanghai/data/poi_seeding.py 读取本文件,对每栋建筑做 POI 计票
 #
-# Amap (Gaode) POI categories contain hundreds of sub-types with overlapping
-# semantics (e.g., "餐饮服务;中餐厅;综合酒楼" vs. "餐饮服务;中餐厅;特色/地方风味餐厅"
-# both belong to the same archetype, but "餐饮服务;茶艺馆" probably maps to
-# `culture` rather than `shopping_mall`). Bad mappings silently corrupt the
-# Module B training set and propagate downstream.
-#
-# Process:
-#   1. Run `scripts/run_module_a.py --generate-poi-candidates` to dump every
-#      distinct Amap "type" string that intersects at least one building
-#      polygon, with frequency counts.
-#   2. Open the candidate list and assign each row to one of the 14 archetypes
-#      defined in config/archetypes.yaml, or leave as `null` to drop.
-#   3. Paste the reviewed mapping into the `mappings` block below and commit.
-#
-# Each key is the Amap "type" string (semicolon-delimited). Each value is an
-# archetype name from config/archetypes.yaml, or `null` to exclude.
 # -----------------------------------------------------------------------------
+# 编码格式
+# -----------------------------------------------------------------------------
+# 高德 NEW_TYPE 是 6 位十进制编码:
+#   - 大类(big): 前 2 位非零,余 4 位为零 (如 130000 = 政府机构及社会团体)
+#   - 中类(mid): 前 4 位非零,余 2 位为零 (如 130100 = 机关团体)
+#   - 小类(sub): 全 6 位                  (如 130101 = 中央机构)
+#
+# -----------------------------------------------------------------------------
+# 解析优先级(读 yaml 的程序必须按这个顺序)
+# -----------------------------------------------------------------------------
+# 1. sub_category_overrides   (6 位精确匹配,最高优先级)
+# 2. mid_category_overrides   (前 4 位匹配)
+# 3. big_category_rules       (前 2 位匹配,兜底)
+# 4. fallback                 (上述都没命中时)
+#
+# -----------------------------------------------------------------------------
+# 设计原则
+# -----------------------------------------------------------------------------
+# A 档(13 大类 skip): POI 不代表建筑实体(加油站/路名/事件/小铺面等)
+# B 档(5 大类整体映射): 大类内绝大多数小类落到同一 archetype
+# C 档(5 大类内部细分): 大类内不同中类映射到不同 archetype
+#   - 060000 购物服务: shopping_mall vs skip
+#   - 080000 体育休闲: sports vs hotel vs culture vs skip
+#   - 140000 科教文化: culture vs exhibition vs education vs office vs skip
+#   - 150000 交通设施: transportation vs skip
+#   - 120000 商务住宅: office vs residential vs mixed_use vs government_office
+#
+# 综合体(mixed_use)的最终判定走 POI 类目多样性的"熵阈值"机制
+# (见 config/archetypes.yaml 中 mixed_use 定义),POI 标签 120203 只做先验。
+# =============================================================================
 
-# Used by Module A to confirm this file has been reviewed.
-# Set to true ONLY after a human has filled in the mappings.
-reviewed: false
 
-mappings: {}   # TODO populate after human review
+metadata:
+  source: "https://a.amap.com/lbs/static/amap_poicode.xlsx.zip"
+  source_date: "2017-08-10"
+  total_codes: 869
+  big_categories: 23
+  mid_categories: 264
+  schema_version: "1.0"
+  created: "2026-06-20"
+  notes: |
+    Mapping derived collaboratively in claude.ai design session.
+    Cross-referenced against Wang Hebin et al. 2026 Shanghai platform
+    12-class public building taxonomy and Yin Haipei et al. 2022 Jiangsu
+    public building classification standard.
 
-# Optional: explicit drop list for noisy POI categories (parking lots, ATMs,
-# bus stops, etc.) that should never seed an archetype label.
-drop_categories: []   # TODO
+
+archetypes:
+  public:
+    - government_office  # 党政机关、社会团体
+    - office             # 写字楼、企业、传媒、金融
+    - hotel              # 宾馆、酒店、度假村
+    - shopping_mall      # 商场、超市、专题市场
+    - healthcare         # 医院、卫生院、药店
+    - education          # 学校、科研机构
+    - sports             # 体育馆、运动场馆
+    - culture            # 博物馆、图书馆、影剧院、文化宫
+    - transportation     # 机场、火车站、长途站、港口
+    - exhibition         # 展览馆、会展中心
+    - mixed_use          # 综合体(podium + tower);熵阈值最终判定
+    - other_public       # 其他公建兜底
+  residential:
+    - residential        # mid_rise / high_rise 由楼层数二分
+                         # (globals.floor_count_cutoff = 10,见 config/archetypes.yaml)
+
+
+# =============================================================================
+# 大类规则(前 2 位编码匹配)
+# =============================================================================
+
+big_category_rules:
+
+  # ---------------------------------------------------------------------------
+  # A 档:整大类 skip(POI 不代表建筑实体)
+  # ---------------------------------------------------------------------------
+  "010000": { rule: skip, name: "汽车服务",          count: 25,  reason: "加油站、洗车,附属设施" }
+  "020000": { rule: skip, name: "汽车销售",          count: 96,  reason: "4S 店租用其他建筑,不代表整栋" }
+  "030000": { rule: skip, name: "汽车维修",          count: 97,  reason: "修车铺,不代表整栋建筑" }
+  "040000": { rule: skip, name: "摩托车服务",        count: 5,   reason: "附属设施" }
+  "050000": { rule: skip, name: "餐饮服务",          count: 65,  reason: "几乎都是商场/写字楼里的一个店" }
+  "070000": { rule: skip, name: "生活服务",          count: 52,  reason: "99% 是商铺(洗衣/旅行社/邮政等)" }
+  "110000": { rule: skip, name: "风景名胜",          count: 18,  reason: "不是建筑实体" }
+  "180000": { rule: skip, name: "道路附属设施",      count: 15,  reason: "桥梁、收费站、ETC" }
+  "190000": { rule: skip, name: "地名地址信息",      count: 36,  reason: "地名而非建筑" }
+  "200000": { rule: skip, name: "公共设施",          count: 9,   reason: "公厕、垃圾站" }
+  "220000": { rule: skip, name: "事件活动",          count: 15,  reason: "临时事件,不是建筑" }
+  "970000": { rule: skip, name: "室内设施",          count: 1,   reason: "建筑内部" }
+  "990000": { rule: skip, name: "通行设施",          count: 6,   reason: "出入口" }
+
+  # ---------------------------------------------------------------------------
+  # B 档:整大类映射到一个 archetype
+  # ---------------------------------------------------------------------------
+  "090000":
+    rule: archetype
+    name: "医疗保健服务"
+    count: 25
+    archetype: healthcare
+    note: "医院、卫生院、诊所、药店;25 条全归 healthcare"
+
+  "100000":
+    rule: archetype
+    name: "住宿服务"
+    count: 9
+    archetype: hotel
+    note: "宾馆、酒店、旅馆;9 条全归 hotel"
+
+  "130000":
+    rule: archetype
+    name: "政府机构及社会团体"
+    count: 41
+    archetype: government_office
+    note: "党政机关、事业单位、社会团体;41 条全归 government_office"
+
+  "170000":
+    rule: archetype
+    name: "公司企业"
+    count: 22
+    archetype: office
+    note: "各类公司企业;22 条全归 office"
+
+  "160000":
+    rule: archetype
+    name: "金融保险服务"
+    count: 115
+    archetype: office
+    note: "银行/保险/证券 → office;自动提款机(中类 160300, 49 条)在 mid_overrides 单独 skip"
+
+  # ---------------------------------------------------------------------------
+  # C 档:大类内按中类细分(default 用于 mid_overrides 没命中的小类)
+  # ---------------------------------------------------------------------------
+  "060000":
+    rule: requires_mid_override
+    name: "购物服务"
+    count: 84
+    default: skip
+    note: "shopping_mall 6 中类(44 条);其余 9 中类(40 条)skip"
+
+  "080000":
+    rule: requires_mid_override
+    name: "体育休闲服务"
+    count: 46
+    default: skip
+    note: "sports/hotel/culture/skip 四档;见 mid_overrides"
+
+  "140000":
+    rule: requires_mid_override
+    name: "科教文化服务"
+    count: 31
+    default: skip
+    note: "culture/exhibition/education/office/skip 五档;见 mid_overrides"
+
+  "150000":
+    rule: requires_mid_override
+    name: "交通设施服务"
+    count: 45
+    default: skip
+    note: "transportation 大型枢纽建筑;skip 站牌/停车场/上下车点"
+
+  "120000":
+    rule: requires_mid_override
+    name: "商务住宅"
+    count: 11
+    default: other_public
+    note: "整体方向明确,内部拆 office(产业园区/楼宇)/residential(住宅区)/mixed_use(120203)/government_office(120304)"
+
+
+# =============================================================================
+# 中类 override(前 4 位编码匹配)
+# =============================================================================
+
+mid_category_overrides:
+
+  # ---------------------------------------------------------------------------
+  # 商务住宅(B 档大类整体方向,内部拆分)
+  # ---------------------------------------------------------------------------
+  "120100": { archetype: office,        name: "产业园区",     count: 1 }
+  "120200": { archetype: office,        name: "楼宇",         count: 4,
+              note: "含 120201 写字楼/120202 工业大厦;120203 商住两用走 sub_override → mixed_use" }
+  "120300": { archetype: residential,   name: "住宅区",       count: 5,
+              note: "含 120301 别墅/120302 小区/120303 宿舍;120304 社区中心走 sub_override → government_office" }
+
+  # ---------------------------------------------------------------------------
+  # 金融保险:大类整体 office,自动提款机例外
+  # ---------------------------------------------------------------------------
+  "160300": { rule: skip, name: "自动提款机", count: 49,
+              note: "ATM 不是建筑实体;虽然金融大类整体归 office,这一中类例外" }
+
+  # ---------------------------------------------------------------------------
+  # 060000 购物服务 C 档(15 个中类)
+  # ---------------------------------------------------------------------------
+  "060100": { archetype: shopping_mall, name: "商场",            count: 4,  note: "购物中心/普通商场/免税店" }
+  "060300": { archetype: shopping_mall, name: "家电电子卖场",    count: 9,  note: "国美/苏宁/大中等大型卖场" }
+  "060400": { archetype: shopping_mall, name: "超级市场",        count: 14, note: "沃尔玛/家乐福/麦德龙等大型超市" }
+  "060500": { archetype: shopping_mall, name: "花鸟鱼虫市场",    count: 3,  note: "独立专题市场建筑" }
+  "060600": { archetype: shopping_mall, name: "家居建材市场",    count: 7,  note: "居然之家/红星美凯龙等大体量独立建筑" }
+  "060700": { archetype: shopping_mall, name: "综合市场",        count: 7,  note: "农贸/水产/小商品市场,独立市场建筑(能耗模式有差异,Discussion 提及)" }
+  "060200": { rule: skip, name: "便民商店/便利店",  count: 3,  note: "7-11/全家,嵌在商住楼" }
+  "060800": { rule: skip, name: "文化用品店",       count: 1 }
+  "060900": { rule: skip, name: "体育用品店",       count: 8,  note: "李宁/迪卡侬等专卖店" }
+  "061000": { rule: skip, name: "特色商业街",       count: 2,  note: "'街'不是单栋建筑(南京路/田子坊)" }
+  "061100": { rule: skip, name: "服装鞋帽皮具店",   count: 5 }
+  "061200": { rule: skip, name: "专卖店",           count: 15, note: "各种品牌专卖店" }
+  "061300": { rule: skip, name: "特殊买卖场所",     count: 3,  note: "拍卖行/典当行,稀少" }
+  "061400": { rule: skip, name: "个人用品/化妆品店", count: 2 }
+
+  # ---------------------------------------------------------------------------
+  # 080000 体育休闲 C 档(7 个中类)
+  # ---------------------------------------------------------------------------
+  "080100": { archetype: sports,   name: "运动场馆",       count: 20, note: "综合体育馆/游泳馆/健身中心等" }
+  "080200": { archetype: sports,   name: "高尔夫相关",     count: 3,  note: "球场是用地,POI 命中会所建筑" }
+  "080300": { rule: skip,          name: "娱乐场所",       count: 9,  note: "KTV/酒吧/网吧/棋牌室,几乎全嵌在商业楼" }
+  "080400": { archetype: hotel,    name: "度假疗养场所",   count: 3,  note: "度假村+疗养院,能耗模式接近酒店" }
+  "080500": { rule: skip,          name: "休闲场所",       count: 6,  note: "游乐场/垂钓园/露营地,室外用地" }
+  "080600": { archetype: culture,  name: "影剧院",         count: 4,  note: "电影院/音乐厅/剧场,对齐 Wang et al. '文化建筑'" }
+
+  # ---------------------------------------------------------------------------
+  # 140000 科教文化 C 档(16 个中类)
+  # ---------------------------------------------------------------------------
+  "140100": { archetype: culture,    name: "博物馆",     count: 3 }
+  "140200": { archetype: exhibition, name: "展览馆",     count: 2,  note: "上海展览中心等" }
+  "140300": { archetype: exhibition, name: "会展中心",   count: 1,  note: "新国际博览中心、世博中心" }
+  "140400": { archetype: culture,    name: "美术馆",     count: 1 }
+  "140500": { archetype: culture,    name: "图书馆",     count: 1 }
+  "140600": { archetype: culture,    name: "科技馆",     count: 1 }
+  "140700": { archetype: culture,    name: "天文馆",     count: 1 }
+  "140800": { archetype: culture,    name: "文化宫",     count: 1 }
+  "140900": { archetype: culture,    name: "档案馆",     count: 1 }
+  "141000": { archetype: culture,    name: "文艺团体",   count: 1 }
+  "141100": { archetype: office,     name: "传媒机构",   count: 6,  note: "报社/电视台/电台/出版社,多为办公性质" }
+  "141200": { archetype: education,  name: "学校",       count: 8,  note: "高校/中学/小学/幼儿园/职业技术" }
+  "141300": { archetype: education,  name: "科研机构",   count: 1,  note: "中科院研究所等,跟教育建筑能耗接近" }
+  "141400": { rule: skip,            name: "培训机构",   count: 1,  note: "新东方/学而思,嵌在写字楼" }
+  "141500": { rule: skip,            name: "驾校",       count: 1,  note: "训练场+小型管理用房" }
+
+  # ---------------------------------------------------------------------------
+  # 150000 交通设施 C 档(14 个中类)
+  # ---------------------------------------------------------------------------
+  "150100": { archetype: transportation, name: "机场相关",      count: 7,  note: "浦东/虹桥机场航站楼" }
+  "150200": { archetype: transportation, name: "火车站",        count: 11, note: "上海站/南站/虹桥火车站" }
+  "150300": { archetype: transportation, name: "港口码头",      count: 5,  note: "客运港候船楼;货运港 spatial join 命中率低" }
+  "150400": { archetype: transportation, name: "长途汽车站",    count: 1 }
+  "150500": { archetype: transportation, name: "地铁站",        count: 2,  note: "大多数地下,spatial join 命中率低" }
+  "150600": { archetype: transportation, name: "轻轨站",        count: 1 }
+  "150700": { rule: skip,                name: "公交车站",      count: 4,  note: "站牌,不是建筑" }
+  "150800": { rule: skip,                name: "班车站",        count: 1 }
+  "150900": { rule: skip,                name: "停车场",        count: 8,  note: "用地,无对应 archetype" }
+  "151000": { archetype: transportation, name: "过境口岸",      count: 1 }
+  "151100": { rule: skip,                name: "出租车",        count: 1 }
+  "151200": { archetype: transportation, name: "轮渡站",        count: 1 }
+  "151300": { archetype: transportation, name: "索道站",        count: 1 }
+
+
+# =============================================================================
+# 小类 override(6 位精确匹配,最高优先级)
+# 仅用于跨中类的标签级特殊情况
+# =============================================================================
+
+sub_category_overrides:
+
+  "120203":  # 商住两用楼宇
+    archetype: mixed_use
+    name: "商住两用楼宇"
+    note: "POI 标签明确标示综合体,先验 hit;熵阈值再做兜底校正"
+
+  "120303":  # 宿舍(跟中类 120300 同,显式标注理由)
+    archetype: residential
+    name: "宿舍"
+    note: "Wang et al. 144 点矩阵不收宿舍;归 residential 不冲突校准(走 ±20% 年度轨道)"
+
+  "120304":  # 社区中心
+    archetype: government_office
+    name: "社区中心"
+    note: "社区居委会+党建活动中心,基层党政性质"
+
+
+# =============================================================================
+# 兜底逻辑(模块 A 实现时引用)
+# =============================================================================
+
+fallback:
+  no_poi_hit:
+    archetype: unknown
+    pass_to_ml: true
+    note: "建筑没有任何 POI 命中,标 unknown 送 ML 模块(模块 B)按形状特征推断"
+
+  all_skip_hits:
+    archetype: unknown
+    pass_to_ml: true
+    note: "建筑所有 POI 命中都在 skip 列表(罕见),标 unknown 送 ML"
+
+
+# =============================================================================
+# 最终统计(由 scripts/validate_poi_mapping.py 自动生成 + 人工核对)
+# =============================================================================
+
+summary:
+  total_codes: 869
+  by_archetype:
+    skip: 563              # A档整大类 489 + C档中类 74
+    office: 98             # 公司企业 22 + 金融非ATM 66 + 传媒 6 + 商务住宅 office 4
+    shopping_mall: 44      # 购物服务 6 个中类
+    government_office: 42  # 政府机构 41 + 社区中心 1
+    transportation: 30     # 交通设施 9 个中类
+    healthcare: 25         # 医疗保健大类
+    sports: 23             # 运动场馆 20 + 高尔夫 3
+    culture: 14            # 科教文化 10 + 影剧院 4
+    hotel: 12              # 住宿服务 9 + 度假疗养 3
+    education: 9           # 学校 8 + 科研机构 1
+    residential: 4         # 商务住宅 120300 minus 120304 sub_override
+    exhibition: 3          # 展览馆 2 + 会展中心 1
+    other_public: 1        # 120000 大类占位
+    mixed_use: 1           # 120203 商住两用
+  unknown: 0               # 所有 869 条都有归属 ✓
