@@ -41,6 +41,8 @@ external data, and things explicitly deferred. One bullet per item with the
 owner ("@owner" / "@claude-code") and a one-line status._
 
 - [@owner] 设定综合体 (mixed_use) 的 POI 类目多样性熵阈值 — 模块 A POI 计票实现后再定。先验参考:Wang et al. 2026 综合建筑占上海监测面积 22.5%。
+- [@deferred] Phase 7: Buildings.shanghai 公开平台 — fork City-Syntax/buildings.city framework + 套上海数据 + 部署。1-2 周工作量,等 Phase 1-6 全部跑完再启动。
+
 ---
 
 ## 4. Data Acquisition Progress
@@ -52,7 +54,7 @@ inputs Module A depends on._
 | Source | Status | Location | Last updated |
 |---|---|---|---|
 | Taobao buildings + storeys | _TODO_ | `data/raw/taobao/` | _TODO_ |
-| Taobao / Amap POI | _TODO_ | `data/raw/taobao/poi/` or `data/raw/amap/` | _TODO_ |
+| Taobao / Amap POI | Amap personal-dev key acquired (held locally, not in Git); fetch deferred to Module A | `data/raw/amap/` | 2026-06-20 |
 | OpenStreetMap buildings (fallback) | _TODO_ | `data/raw/osm/` | _TODO_ |
 | Microsoft Global ML Building Footprints | _TODO_ | `data/raw/ms_buildings/` | _TODO_ |
 | CNBH-10m / 3D-GloBFP height raster | _TODO_ | `data/raw/cnbh/` | _TODO_ |
@@ -103,4 +105,4 @@ _Anything Claude Code surfaced that the owner has not yet answered. Each
 question stays here until it is resolved by the owner via claude.ai, after
 which it migrates to §2 Recent Decisions as a row._
 
-- _TODO — no open questions yet._
+- [@owner, surfaced 2026-06-20 from Amap API test] **Multi-typecode POI 计票策略**:实测发现单个 POI 可能有多个 typecode(`|` 分隔),例:"上海东方明珠广播电视塔有限公司" 的 typecode = `170200|141300|141100`,会同时贡献 office × 2 + education × 1。模块 A 实现 `poi_seeding.py` 时需决定计票方案:(A) 每 typecode 算 1 票,(B) 只用第一个,(C) 1/N 票均分,(D) 多 typecode 视为 mixed_use 信号。当前倾向方案 C(投票权守恒),待模块 A 跑通后用实际数据分布验证。
