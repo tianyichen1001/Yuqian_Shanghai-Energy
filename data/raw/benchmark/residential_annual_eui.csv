@@ -1,0 +1,13 @@
+archetype,metric,value,unit,source,year,note
+residential_avg,electricity_constraint,3100,kWh/household/a,GB/T 51161-2016 Table 4.2.1,2016,夏热冬冷区约束值
+residential_avg,gas_constraint,240,m3/household/a,GB/T 51161-2016 Table 4.2.1,2016,夏热冬冷区约束值
+residential_avg,shanghai_tier1_upper,3120,kWh/household/a,Shanghai DRC 沪发改价管2012-020,2012,阶梯电价第一档上限_80%居民覆盖
+residential_avg,shanghai_tier2_upper,4800,kWh/household/a,Shanghai DRC 沪发改价管2012-020,2012,阶梯电价第二档上限_95%居民覆盖
+residential_avg,annual_eui_lower,31.5,kWh/m2/a,derived from GB 3100/98.4,2024,GB约束值折算per-area
+residential_avg,annual_eui_upper,48.8,kWh/m2/a,derived from SH tier2 4800/98.4,2024,上海阶梯电价第二档折算
+residential_avg,heating_share,10,percent,Hu & Yan 2016 Energy Policy doi:10.1016/j.enpol.2016.01.032,2016,HSCW实测_采暖占住宅总能耗
+residential_avg,cooling_share,25,percent,engineering estimate,2024,待Module C验证
+residential_avg,other_share,65,percent,residual = 100 - 10 - 25,2024,照明+家电+热水
+shanghai,urban_per_capita_floor_area,37.57,m2/person,Shanghai Statistical Bulletin 2024,2024,城镇居民人均住房建筑面积
+shanghai,household_size_registered,2.62,persons/household,derived from Shanghai Yearbook 2024,2023,户籍口径_1516.39万人÷578.52万户
+shanghai,household_area,98.4,m2/household,derived = per_capita * household_size,2024,主用口径_GB校准换算用
