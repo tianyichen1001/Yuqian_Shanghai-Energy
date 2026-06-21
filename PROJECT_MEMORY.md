@@ -26,6 +26,7 @@ line, and whether it has been encoded in the repo (commit / config / doc)._
 
 | Date | Decision | Rationale | Encoded in |
 |---|---|---|---|
+| 2026-06-21 | Residential benchmark 改用 GB/T 51161 + 上海阶梯电价 + 上海统计公报 + Hu & Yan 2016 Energy Policy,放弃原计划的清华 CBEM 2025 | 公开政府文件 + 顶刊论文引用规范度优于工具书;数据时点对齐(2024 上海)优于 CBEM 整本 2023 年统计;能精确折算 per-area EUI(GB 户 → 上海户均面积 98.4 m²) | `data/raw/benchmark/residential_annual_eui.csv` |
 | 2026-06-20 | POI category → archetype mapping dictionary completed (869 codes → 14 archetypes, 0 unknown) | Key calls: 金融保险→office (ATM single-out skip); 综合市场→shopping_mall (no wet_market archetype); 宿舍→residential (Wang et al. 144 不收宿舍); 商住两用→mixed_use prior | `config/poi_mapping.yaml` (PR #4) |
 | 2026-06-18 | Mixed-use modeled as podium retail + tower office vertical composite (not a single archetype) | Wang et al. 综合建筑 monthly EUI is closer to office than to pure retail; ~22.5% of monitored floor area justifies first-class treatment | `config/archetypes.yaml` mixed_use |
 | 2026-06-18 | Residential mid_rise vs high_rise cutoff set at 10 storeys | Aligns with GB 50016-2014 / GB 50352-2019 fire-safety definition of 高层住宅 | `config/archetypes.yaml` globals.floor_count_cutoff |
@@ -60,7 +61,7 @@ inputs Module A depends on._
 | CNBH-10m / 3D-GloBFP height raster | _TODO_ | `data/raw/cnbh/` | _TODO_ |
 | EULUC-China land use | acquired locally (v2.0, 3.1 GB GPKG, MD5-verified, gitignored per SOP); README scaffolded in repo | `data/raw/euluc/README.md` (full GPKG stored outside repo at owner's `E:\Energy\Yuqian_Shanghai_Energy_data\`) | 2026-06-21 |
 | Wang et al. 2026 monthly EUI (144 points) | ingested (12 archetypes × 12 months, sanity-checked vs published annual within ±0.2 kWh/m²) | `data/raw/benchmark/wang_2026_public_monthly.csv` | 2026-06-21 |
-| Tsinghua residential annual benchmarks | _TODO_ | `data/raw/benchmark/` | _TODO_ |
+| Residential annual benchmarks | ingested (GB/T 51161 约束值 + 上海发改委阶梯电价档位 + 上海统计公报 + Hu & Yan 2016 Energy Policy 采暖占比;原计划的清华 CBEM 2025 评估后改用上述公开源,引用更规范) | `data/raw/benchmark/residential_annual_eui.csv` | 2026-06-21 |
 | One Click LCA China EPDs | _TODO_ | `data/raw/epd_oneclick/` | _TODO_ |
 | Shanghai EPW (TMY / CSWD) | ingested (CSWD + TMYx.2011-2025, station 583620 Baoshan) | `weather/` | 2026-06-20 |
 
