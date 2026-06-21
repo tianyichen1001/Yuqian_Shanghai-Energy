@@ -54,7 +54,8 @@ inputs Module A depends on._
 
 | Source | Status | Location | Last updated |
 |---|---|---|---|
-| Taobao buildings + storeys | _TODO_ | `data/raw/taobao/` | _TODO_ |
+| Taobao buildings 2026 (all 16 districts, height) | acquired locally (843,063 buildings, WGS84, height=4-415m, +Area +district fields, encoding=gbk, MD5: ED87E281..., gitignored per SOP) | `data/raw/taobao/shanghai_2026_height/README.md` | 2026-06-21 |
+| Taobao buildings 2023 (central, FLOOR) | acquired locally (412,100 buildings, WGS84, FLOOR=2-236 w/ <0.1% outliers >128, MD5: 674A7662..., gitignored per SOP) — used as Height→Floor calibration set | `data/raw/taobao/shanghai_2023_floor/README.md` | 2026-06-21 |
 | Taobao / Amap POI | Amap personal-dev key acquired (held locally, not in Git); fetch deferred to Module A | `data/raw/amap/` | 2026-06-20 |
 | OpenStreetMap buildings (fallback) | _TODO_ | `data/raw/osm/` | _TODO_ |
 | Microsoft Global ML Building Footprints | _TODO_ | `data/raw/ms_buildings/` | _TODO_ |
