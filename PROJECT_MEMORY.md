@@ -58,8 +58,8 @@ inputs Module A depends on._
 | OpenStreetMap buildings (fallback) | _TODO_ | `data/raw/osm/` | _TODO_ |
 | Microsoft Global ML Building Footprints | _TODO_ | `data/raw/ms_buildings/` | _TODO_ |
 | CNBH-10m / 3D-GloBFP height raster | _TODO_ | `data/raw/cnbh/` | _TODO_ |
-| EULUC-China land use | _TODO_ | `data/raw/euluc/` | _TODO_ |
-| Wang et al. 2026 monthly EUI (144 points) | _TODO_ | `data/raw/benchmark/wang_2026_public_monthly.csv` | _TODO_ |
+| EULUC-China land use | acquired locally (v2.0, 3.1 GB GPKG, MD5-verified, gitignored per SOP); README scaffolded in repo | `data/raw/euluc/README.md` (full GPKG stored outside repo at owner's `E:\Energy\Yuqian_Shanghai_Energy_data\`) | 2026-06-21 |
+| Wang et al. 2026 monthly EUI (144 points) | ingested (12 archetypes × 12 months, sanity-checked vs published annual within ±0.2 kWh/m²) | `data/raw/benchmark/wang_2026_public_monthly.csv` | 2026-06-21 |
 | Tsinghua residential annual benchmarks | _TODO_ | `data/raw/benchmark/` | _TODO_ |
 | One Click LCA China EPDs | _TODO_ | `data/raw/epd_oneclick/` | _TODO_ |
 | Shanghai EPW (TMY / CSWD) | ingested (CSWD + TMYx.2011-2025, station 583620 Baoshan) | `weather/` | 2026-06-20 |
