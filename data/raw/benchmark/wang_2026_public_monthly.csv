@@ -1,0 +1,145 @@
+archetype,month,eui_kwh_m2,source_figure_table,notes
+government_office,1,9.1,"Wang et al. 2026, Table 2",
+government_office,2,8.2,"Wang et al. 2026, Table 2",
+government_office,3,7.3,"Wang et al. 2026, Table 2",
+government_office,4,5.8,"Wang et al. 2026, Table 2",
+government_office,5,6.2,"Wang et al. 2026, Table 2",
+government_office,6,7.2,"Wang et al. 2026, Table 2",
+government_office,7,10.8,"Wang et al. 2026, Table 2",
+government_office,8,11.1,"Wang et al. 2026, Table 2",
+government_office,9,9.4,"Wang et al. 2026, Table 2",
+government_office,10,6.2,"Wang et al. 2026, Table 2",
+government_office,11,6.2,"Wang et al. 2026, Table 2",
+government_office,12,8.3,"Wang et al. 2026, Table 2",
+office,1,7.6,"Wang et al. 2026, Table 2",
+office,2,6.4,"Wang et al. 2026, Table 2",
+office,3,6.3,"Wang et al. 2026, Table 2",
+office,4,5.4,"Wang et al. 2026, Table 2",
+office,5,5.8,"Wang et al. 2026, Table 2",
+office,6,6.7,"Wang et al. 2026, Table 2",
+office,7,9.9,"Wang et al. 2026, Table 2",
+office,8,10.2,"Wang et al. 2026, Table 2",
+office,9,8.5,"Wang et al. 2026, Table 2",
+office,10,5.8,"Wang et al. 2026, Table 2",
+office,11,5.6,"Wang et al. 2026, Table 2",
+office,12,7.1,"Wang et al. 2026, Table 2",
+hotel,1,9.0,"Wang et al. 2026, Table 2",
+hotel,2,8.2,"Wang et al. 2026, Table 2",
+hotel,3,8.3,"Wang et al. 2026, Table 2",
+hotel,4,7.7,"Wang et al. 2026, Table 2",
+hotel,5,8.3,"Wang et al. 2026, Table 2",
+hotel,6,9.4,"Wang et al. 2026, Table 2",
+hotel,7,12.3,"Wang et al. 2026, Table 2",
+hotel,8,12.9,"Wang et al. 2026, Table 2",
+hotel,9,11.1,"Wang et al. 2026, Table 2",
+hotel,10,8.6,"Wang et al. 2026, Table 2",
+hotel,11,7.8,"Wang et al. 2026, Table 2",
+hotel,12,8.7,"Wang et al. 2026, Table 2",
+shopping_mall,1,12.0,"Wang et al. 2026, Table 2",
+shopping_mall,2,10.8,"Wang et al. 2026, Table 2",
+shopping_mall,3,11.0,"Wang et al. 2026, Table 2",
+shopping_mall,4,10.7,"Wang et al. 2026, Table 2",
+shopping_mall,5,11.6,"Wang et al. 2026, Table 2",
+shopping_mall,6,12.6,"Wang et al. 2026, Table 2",
+shopping_mall,7,15.5,"Wang et al. 2026, Table 2",
+shopping_mall,8,16.0,"Wang et al. 2026, Table 2",
+shopping_mall,9,13.9,"Wang et al. 2026, Table 2",
+shopping_mall,10,11.5,"Wang et al. 2026, Table 2",
+shopping_mall,11,10.7,"Wang et al. 2026, Table 2",
+shopping_mall,12,11.4,"Wang et al. 2026, Table 2",
+healthcare,1,12.3,"Wang et al. 2026, Table 2",
+healthcare,2,11.6,"Wang et al. 2026, Table 2",
+healthcare,3,11.1,"Wang et al. 2026, Table 2",
+healthcare,4,10.2,"Wang et al. 2026, Table 2",
+healthcare,5,11.0,"Wang et al. 2026, Table 2",
+healthcare,6,12.1,"Wang et al. 2026, Table 2",
+healthcare,7,15.3,"Wang et al. 2026, Table 2",
+healthcare,8,15.5,"Wang et al. 2026, Table 2",
+healthcare,9,13.8,"Wang et al. 2026, Table 2",
+healthcare,10,11.0,"Wang et al. 2026, Table 2",
+healthcare,11,10.4,"Wang et al. 2026, Table 2",
+healthcare,12,11.7,"Wang et al. 2026, Table 2",
+mixed_use,1,8.7,"Wang et al. 2026, Table 2","podium+tower aggregate; secondary modeling per archetypes.yaml"
+mixed_use,2,7.8,"Wang et al. 2026, Table 2","podium+tower aggregate; secondary modeling per archetypes.yaml"
+mixed_use,3,7.8,"Wang et al. 2026, Table 2","podium+tower aggregate; secondary modeling per archetypes.yaml"
+mixed_use,4,7.1,"Wang et al. 2026, Table 2","podium+tower aggregate; secondary modeling per archetypes.yaml"
+mixed_use,5,7.7,"Wang et al. 2026, Table 2","podium+tower aggregate; secondary modeling per archetypes.yaml"
+mixed_use,6,8.5,"Wang et al. 2026, Table 2","podium+tower aggregate; secondary modeling per archetypes.yaml"
+mixed_use,7,11.0,"Wang et al. 2026, Table 2","podium+tower aggregate; secondary modeling per archetypes.yaml"
+mixed_use,8,11.1,"Wang et al. 2026, Table 2","podium+tower aggregate; secondary modeling per archetypes.yaml"
+mixed_use,9,9.7,"Wang et al. 2026, Table 2","podium+tower aggregate; secondary modeling per archetypes.yaml"
+mixed_use,10,7.6,"Wang et al. 2026, Table 2","podium+tower aggregate; secondary modeling per archetypes.yaml"
+mixed_use,11,7.3,"Wang et al. 2026, Table 2","podium+tower aggregate; secondary modeling per archetypes.yaml"
+mixed_use,12,8.3,"Wang et al. 2026, Table 2","podium+tower aggregate; secondary modeling per archetypes.yaml"
+education,1,3.4,"Wang et al. 2026, Table 2","Wang sample limited; supplement with Tsinghua data"
+education,2,3.2,"Wang et al. 2026, Table 2","Wang sample limited; supplement with Tsinghua data"
+education,3,3.4,"Wang et al. 2026, Table 2","Wang sample limited; supplement with Tsinghua data"
+education,4,3.1,"Wang et al. 2026, Table 2","Wang sample limited; supplement with Tsinghua data"
+education,5,3.2,"Wang et al. 2026, Table 2","Wang sample limited; supplement with Tsinghua data"
+education,6,3.4,"Wang et al. 2026, Table 2","Wang sample limited; supplement with Tsinghua data"
+education,7,3.5,"Wang et al. 2026, Table 2","Wang sample limited; supplement with Tsinghua data"
+education,8,3.6,"Wang et al. 2026, Table 2","Wang sample limited; supplement with Tsinghua data"
+education,9,4.0,"Wang et al. 2026, Table 2","Wang sample limited; supplement with Tsinghua data"
+education,10,3.2,"Wang et al. 2026, Table 2","Wang sample limited; supplement with Tsinghua data"
+education,11,3.2,"Wang et al. 2026, Table 2","Wang sample limited; supplement with Tsinghua data"
+education,12,3.8,"Wang et al. 2026, Table 2","Wang sample limited; supplement with Tsinghua data"
+culture,1,7.0,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+culture,2,6.5,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+culture,3,6.2,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+culture,4,5.5,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+culture,5,5.8,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+culture,6,6.3,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+culture,7,8.3,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+culture,8,8.6,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+culture,9,7.6,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+culture,10,5.7,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+culture,11,5.5,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+culture,12,6.5,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+sports,1,5.2,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+sports,2,5.1,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+sports,3,5.0,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+sports,4,4.9,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+sports,5,4.9,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+sports,6,5.1,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+sports,7,5.9,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+sports,8,6.1,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+sports,9,5.6,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+sports,10,4.9,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+sports,11,4.8,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+sports,12,5.1,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+exhibition,1,2.8,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+exhibition,2,2.8,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+exhibition,3,3.6,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+exhibition,4,3.3,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+exhibition,5,3.5,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+exhibition,6,3.6,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+exhibition,7,3.7,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+exhibition,8,3.5,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+exhibition,9,3.7,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+exhibition,10,3.5,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+exhibition,11,3.9,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+exhibition,12,3.1,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+transportation,1,3.7,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+transportation,2,3.6,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+transportation,3,3.6,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+transportation,4,3.5,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+transportation,5,3.5,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+transportation,6,3.5,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+transportation,7,3.7,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+transportation,8,3.8,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+transportation,9,3.6,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+transportation,10,3.5,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+transportation,11,3.5,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+transportation,12,3.6,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+other_public,1,6.2,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+other_public,2,6.0,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+other_public,3,5.9,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+other_public,4,5.7,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+other_public,5,5.8,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+other_public,6,6.2,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+other_public,7,7.2,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+other_public,8,7.1,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+other_public,9,6.5,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+other_public,10,5.6,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+other_public,11,5.5,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
+other_public,12,6.0,"Wang et al. 2026, Table 2","Wang flags 'sample size limited, reference only'"
