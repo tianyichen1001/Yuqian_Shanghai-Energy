@@ -120,3 +120,14 @@ sqlite.err
 *.log
 *.tmp
 .tmp/
+
+# Taobao building footprints (large shapefiles, held locally per SOP)
+data/raw/taobao/**/*.shp
+data/raw/taobao/**/*.shx
+data/raw/taobao/**/*.dbf
+data/raw/taobao/**/*.prj
+data/raw/taobao/**/*.cpg
+data/raw/taobao/**/*.qix
+data/raw/taobao/**/*.sbn
+data/raw/taobao/**/*.sbx
+data/raw/taobao/**/*.zip
