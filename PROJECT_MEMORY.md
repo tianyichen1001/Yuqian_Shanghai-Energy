@@ -43,6 +43,7 @@ external data, and things explicitly deferred. One bullet per item with the
 owner ("@owner" / "@claude-code") and a one-line status._
 
 - [@owner] 设定综合体 (mixed_use) 的 POI 类目多样性熵阈值 — 模块 A POI 计票实现后再定。先验参考:Wang et al. 2026 综合建筑占上海监测面积 22.5%。
+- [@owner] Validation set #9:三段流水已跑完(extract → checkpoint 1 ✓ 2026-07-02 → checkpoint 2 ✓ 单点判定 A/B 双准,数据确认真 WGS84 → emit),交付物在 `data/raw/validation/working/`。下一步:人工标注 200 行。数据仓阻塞已解除(数据仓 scope + release asset + PAT 通道)。
 - [@deferred] Phase 7: Buildings.shanghai 公开平台 — fork City-Syntax/buildings.city framework + 套上海数据 + 部署。1-2 周工作量,等 Phase 1-6 全部跑完再启动。
 
 ---
@@ -55,7 +56,7 @@ inputs Module A depends on._
 
 | Source | Status | Location | Last updated |
 |---|---|---|---|
-| Taobao buildings 2026 (all 16 districts, height) | acquired locally (843,063 buildings, WGS84, height=4-415m, +Area +district fields, encoding=gbk, MD5: ED87E281..., gitignored per SOP) | `data/raw/taobao/shanghai_2026_height/README.md` | 2026-06-21 |
+| Taobao buildings 2026 (all 16 districts, height) | acquired locally (843,063 buildings, WGS84 ✓实测 2026-07-02 checkpoint-2 单点判定, height=4-415m ⚠️超高层段截断/失真见 README QC, +Area +district fields, encoding=utf-8 per .cpg(原记 gbk 有误,已实测更正), MD5: ED87E281..., gitignored per SOP) | `data/raw/taobao/shanghai_2026_height/README.md` | 2026-07-02 |
 | Taobao buildings 2023 (central, FLOOR) | acquired locally (412,100 buildings, WGS84, FLOOR=2-236 w/ <0.1% outliers >128, MD5: 674A7662..., gitignored per SOP) — used as Height→Floor calibration set | `data/raw/taobao/shanghai_2023_floor/README.md` | 2026-06-21 |
 | Taobao / Amap POI | Amap personal-dev key acquired (held locally, not in Git); fetch deferred to Module A | `data/raw/amap/` | 2026-06-20 |
 | OpenStreetMap buildings (fallback) | _TODO_ | `data/raw/osm/` | _TODO_ |
