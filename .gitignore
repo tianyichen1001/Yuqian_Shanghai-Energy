@@ -91,6 +91,16 @@ ipython_config.py
 
 # Keep the README explaining the raw-data layout
 !/data/raw/README.md
+# Track the validation-set working directory and its deliverables
+# (README, workbook, KML, README_working.md are per-run outputs that must
+# be reproducible and reviewable in the PR).
+!/data/raw/validation/
+!/data/raw/validation/**
+# But do not track the *internal* candidates table (carries `height` and
+# breaks the §5 blind-test rule if leaked) or the checkpoint-1 preview PNGs
+# (large, run-time regenerable).
+/data/raw/validation/working/candidates_internal.parquet
+/data/raw/validation/working/checkpoint1/
 
 # ---------------------------------------------------------------------------
 # EnergyPlus run artifacts
@@ -131,3 +141,6 @@ data/raw/taobao/**/*.qix
 data/raw/taobao/**/*.sbn
 data/raw/taobao/**/*.sbx
 data/raw/taobao/**/*.zip
+
+# Ephemeral working data (never commit)
+scratch_data/
