@@ -83,7 +83,11 @@ class PipelinePaths:
 
 
 def load_footprints(shp_path: Path) -> gpd.GeoDataFrame:
-    """Read the 2026 Shanghai footprint shapefile with the GBK district encoding.
+    """Read the 2026 Shanghai footprint shapefile.
+
+    Attribute encoding is UTF-8, declared by the sidecar ``.cpg`` — pass no
+    ``encoding`` override so pyogrio honours it. (Forcing ``gbk`` garbles
+    ``district``: 浦东新区 → 娴︿笢鏂板尯.)
 
     Sanity checks:
         - CRS is EPSG:4326
@@ -91,7 +95,7 @@ def load_footprints(shp_path: Path) -> gpd.GeoDataFrame:
         - Columns ``height``, ``Area``, ``district`` present.
     """
     LOG.info("reading footprints: %s", shp_path)
-    gdf = gpd.read_file(shp_path, encoding="gbk")
+    gdf = gpd.read_file(shp_path)
 
     crs_str = str(gdf.crs)
     if gdf.crs is None or gdf.crs.to_epsg() != INPUT_CRS_EPSG:
@@ -419,11 +423,15 @@ def _render_preview(
 # ---------------------------------------------------------------------------
 
 #: 3 well-known Shanghai landmarks for the checkpoint-2 link sanity check.
-#: All coords are the published WGS84 values from OpenStreetMap.
+#: True WGS84. The original values here were GCJ-02 mislabelled as WGS84
+#: (checkpoint 2, 2026-07-02: every pin landed ~500 m off, on-road). Fixed by
+#: iterative inverse-GCJ of those values; cross-checked against the 2026
+#: dataset's Jin Mao footprint (3 m) and Wikipedia WGS84 refs (~18 m).
+#: Chinese map sources publish GCJ-02 — do not "refresh" these from Amap/Baidu.
 LINK_TEST_LANDMARKS: list[tuple[str, float, float]] = [
-    ("Shanghai Tower 上海中心", 31.2337, 121.5054),
-    ("Xujiahui Metro Station 徐家汇地铁站", 31.1946, 121.4370),
-    ("Longyang Rd Metro Station 龙阳路地铁站", 31.2049, 121.5573),
+    ("Shanghai Tower 上海中心", 31.23572, 121.50097),
+    ("Xujiahui Metro Station 徐家汇地铁站", 31.19647, 121.43238),
+    ("Longyang Rd Metro Station 龙阳路地铁站", 31.20707, 121.55304),
 ]
 
 

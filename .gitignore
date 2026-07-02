@@ -92,7 +92,7 @@ ipython_config.py
 # Keep the README explaining the raw-data layout
 !/data/raw/README.md
 # Track the validation-set working directory and its deliverables
-# (README, workbook, KML, README_working.md are per-run outputs that must
+# (README, workbook, README_working.md are per-run outputs that must
 # be reproducible and reviewable in the PR).
 !/data/raw/validation/
 !/data/raw/validation/**
@@ -101,6 +101,9 @@ ipython_config.py
 # (large, run-time regenerable).
 /data/raw/validation/working/candidates_internal.parquet
 /data/raw/validation/working/checkpoint1/
+# The KML carries footprint outer rings from the licensed commercial
+# dataset — local-only, regenerate via the emit stage.
+/data/raw/validation/working/validation_pins.kml
 
 # ---------------------------------------------------------------------------
 # EnergyPlus run artifacts

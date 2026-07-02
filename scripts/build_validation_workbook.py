@@ -64,7 +64,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--shp",
         type=Path,
         required=True,
-        help="Path to the 2026 building shapefile (WGS84, encoding=gbk).",
+        help="Path to the 2026 building shapefile (WGS84, UTF-8 attributes per .cpg).",
     )
     _add_common(p_extract)
 
@@ -81,7 +81,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--shp",
         type=Path,
         required=True,
-        help="Path to the 2026 building shapefile (WGS84, encoding=gbk).",
+        help="Path to the 2026 building shapefile (WGS84, UTF-8 attributes per .cpg).",
     )
     p_emit.add_argument(
         "--bd09ll",
