@@ -43,6 +43,7 @@ external data, and things explicitly deferred. One bullet per item with the
 owner ("@owner" / "@claude-code") and a one-line status._
 
 - [@owner] 设定综合体 (mixed_use) 的 POI 类目多样性熵阈值 — 模块 A POI 计票实现后再定。先验参考:Wang et al. 2026 综合建筑占上海监测面积 22.5%。
+- [@owner] Validation set #9 工作包已实现 (`scripts/build_validation_workbook.py` + `src/buildings_shanghai/validation/`),**阻塞**于容器 GitHub 代理不放行 `tianyichen1001/Yuqian_Shanghai-Energy-data`(session repo scope 只含主仓)。需 owner 把数据仓加入本 environment 的 scope,或改用其他方式把 zip 送进容器,才能跑 extract → checkpoint 1 → checkpoint 2 → emit 三段流水。
 - [@deferred] Phase 7: Buildings.shanghai 公开平台 — fork City-Syntax/buildings.city framework + 套上海数据 + 部署。1-2 周工作量,等 Phase 1-6 全部跑完再启动。
 
 ---
