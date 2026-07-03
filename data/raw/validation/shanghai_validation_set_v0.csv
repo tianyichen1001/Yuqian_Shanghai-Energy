@@ -1,0 +1,201 @@
+﻿val_id,lat,lon,area,sample_mode,status,archetype,is_podium_tower,podium_floors,floors_observed,floors_confidence,evidence,streetview_vintage,notes
+V001,31.23547019999998,121.5033391754546,lujiazui,window,annotated,healthcare,0,,1,high,建筑外形,2020,
+V002,31.23929875,121.5073444255023,lujiazui,window,annotated,healthcare,0,3,23,medium,建筑外形,2020,"标注原文:门诊10+住院23,总层数按最高塔记"
+V003,31.2328588,121.5070702594421,lujiazui,window,annotated,office,0,,5,medium,建筑外形,2020,
+V004,31.2345485,121.5048381132353,lujiazui,window,annotated,office,0,,5,medium,建筑外形,2020,
+V005,31.24082900000001,121.495315503349,lujiazui,window,annotated,office,0,,1,high,建筑外形,2020,
+V006,31.23491485,121.50794255,lujiazui,window,annotated,residential,0,,6,high,建筑外形,2020,同款约 6 栋(自动识别)
+V007,31.23736075,121.5065622280937,lujiazui,window,annotated,office,0,,41,high,其他,2020,
+V008,31.23161319999999,121.5030883157154,lujiazui,window,annotated,residential,0,,9,high,其他,2020,
+V009,31.23611634999998,121.4941730016416,lujiazui,window,annotated,shopping_mall,0,,1,high,建筑外形,2020,餐厅
+V010,31.23727509999999,121.5085008064909,lujiazui,window,annotated,residential,0,,5,high,建筑外形,2020,同款约 2 栋(自动识别)
+V011,31.2385574,121.5085704226149,lujiazui,window,annotated,residential,0,,5,high,建筑外形,2020,同款约 2 栋(自动识别)
+V012,31.23548225,121.4981799466991,lujiazui,window,annotated,office,0,,4,high,建筑外形,2020,
+V013,31.24209344999999,121.4999717214089,lujiazui,window,annotated,office,0,5,46,high,其他,2020,
+V014,31.23299689999999,121.5085886308525,lujiazui,window,annotated,residential,0,,6,high,建筑外形,2020,同款约 4 栋(自动识别)
+V015,31.2339055,121.5089325186258,lujiazui,window,annotated,residential,0,,5,high,建筑外形,2020,同款约 4 栋(自动识别)
+V016,31.23279879999999,121.5086898884372,lujiazui,window,annotated,residential,0,,6,high,建筑外形,2020,
+V017,31.2327944,121.5040618622557,lujiazui,window,annotated,residential,0,,32,high,建筑外形,2020,
+V018,31.2336701,121.5065261502415,lujiazui,window,annotated,residential,0,,6,high,建筑外形,2020,同款约 3 栋(自动识别)
+V019,31.2349017,121.5058392366864,lujiazui,window,annotated,residential,0,1,6,high,建筑外形,2020,
+V020,31.2372993,121.496941393313,lujiazui,window,annotated,other_public,0,,1,medium,建筑外形,2020,
+V021,31.23194525,121.5043300001757,lujiazui,window,annotated,other_public,0,,1,low,建筑外形,2020,同款约 2 栋(自动识别)
+V022,31.23390429999999,121.5078567039216,lujiazui,window,annotated,residential,0,,6,high,建筑外形,2020,
+V023,31.23356234999999,121.5013068857443,lujiazui,window,annotated,residential,0,,47,high,其他,2020,
+V024,31.2400075,121.494187165141,lujiazui,window,annotated,office,0,,25,high,建筑外形,2020,
+V025,31.23925365,121.4978282486704,lujiazui,window,annotated,mixed_use,1,4,101,high,其他,2020,
+V026,31.24085289999999,121.5047454589644,lujiazui,window,annotated,office,0,7,44,high,其他,2020,
+V027,31.24282349999999,121.5055002075059,lujiazui,window,annotated,mixed_use,1,5,6,high,其他,2020,同款约 2 栋(自动识别)
+V028,31.2384566,121.5050226783663,lujiazui,window,annotated,office,0,,39,high,其他,2020,
+V029,31.2422752,121.5094646852913,lujiazui,window,annotated,shopping_mall,0,,1,high,建筑外形,2020,同款约 2 栋(自动识别)
+V030,31.2423967,121.4959738381269,lujiazui,window,annotated,shopping_mall,0,,1,medium,建筑外形,2020,
+V031,31.23440025,121.4973314362532,lujiazui,window,annotated,residential,0,,40,high,建筑外形,2020,
+V032,31.23127499999999,121.504655069317,lujiazui,window,annotated,residential,0,,33,medium,建筑外形,2020,
+V033,31.24364999999999,121.4952519618635,lujiazui,window,annotated,office,0,,2,high,建筑外形,2020,
+V034,31.23074934999999,121.5062720858418,lujiazui,window,annotated,education,0,,6,high,建筑外形,2020,
+V035,31.24155509999999,121.5094828670085,lujiazui,window,annotated,culture,0,,2,medium,建筑外形,2020,
+V036,31.24187505,121.5087245488706,lujiazui,window,annotated,residential,0,,26,high,建筑外形,2020,
+V037,31.23231725,121.501098713339,lujiazui,window,annotated,residential,0,,27,high,其他,2020,
+V038,31.24013165,121.5051516296814,lujiazui,window,annotated,office,0,,29,high,其他,2020,
+V039,31.2403678,121.5041429326823,lujiazui,window,annotated,office,0,,43,high,其他,2020,
+V040,31.23645289999999,121.4951631676988,lujiazui,window,annotated,office,0,,38,high,其他,2020,
+V041,31.196573,121.4288377241256,xujiahui,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V042,31.18844959999999,121.4306267552181,xujiahui,window,annotated,shopping_mall,0,,4,medium,建筑外形,2020,同款约 2 栋(自动识别)
+V043,31.19379839999999,121.4339895222764,xujiahui,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V044,31.19209379999999,121.4405832203555,xujiahui,window,annotated,residential,0,,18,high,建筑外形,2020,同款约 3 栋(自动识别)
+V045,31.1911288,121.4409629128367,xujiahui,window,annotated,residential,0,,18,high,建筑外形,2020,
+V046,31.19493179999998,121.4413800632869,xujiahui,window,annotated,residential,0,1,6,high,建筑外形,2020,
+V047,31.20051859999999,121.4367252347792,xujiahui,window,annotated,residential,0,,2,high,建筑外形,2020,同款约 3 栋(自动识别)
+V048,31.20096215,121.4344528624962,xujiahui,window,annotated,residential,0,,2,medium,建筑外形,2020,
+V049,31.18878975,121.4318893388949,xujiahui,window,annotated,mixed_use,1,4,27,high,建筑外形,2020,
+V050,31.19556245,121.4413583839577,xujiahui,window,annotated,office,0,,3,high,建筑外形,2020,同款约 2 栋(自动识别)
+V051,31.18940865,121.442410193644,xujiahui,window,annotated,healthcare,0,1,3,high,建筑外形,2020,
+V052,31.1888149,121.4403395212596,xujiahui,window,annotated,residential,0,1,4,high,建筑外形,2020,同款约 2 栋(自动识别)
+V053,31.19296724999998,121.4309926187197,xujiahui,window,annotated,culture,0,,3,high,建筑外形,2020,同款约 2 栋(自动识别)
+V054,31.19265614999998,121.4314546229402,xujiahui,window,annotated,culture,0,,2,high,建筑外形,2020,同款约 2 栋(自动识别)
+V055,31.19408414999999,121.4356545768904,xujiahui,window,annotated,education,0,,3,medium,其他,2020,
+V056,31.19078995,121.4422041837047,xujiahui,window,annotated,residential,0,,8,high,建筑外形,2020,
+V057,31.19383745,121.4370203864054,xujiahui,window,annotated,education,0,,3,medium,其他,2020,
+V058,31.19816934999999,121.4427445114464,xujiahui,window,annotated,residential,0,,5,high,建筑外形,2020,同款约 2 栋(自动识别)
+V059,31.19460889999998,121.4373159312964,xujiahui,window,annotated,office,0,1,5,high,建筑外形,2020,
+V060,31.19587294999999,121.4412199039302,xujiahui,window,annotated,residential,0,,6,high,建筑外形,2020,
+V061,31.1899398,121.4369607492329,xujiahui,window,annotated,mixed_use,1,3,18,high,建筑外形,2020,同款约 2 栋(自动识别); mixed_use 自动补勾综合体
+V062,31.19065755,121.4430870262005,xujiahui,window,annotated,office,0,,28,high,建筑外形,2020,
+V063,31.1975959,121.4401507872608,xujiahui,window,annotated,office,0,,21,high,建筑外形,2020,
+V064,31.20105964999999,121.4345283677603,xujiahui,window,annotated,unclear,0,,1,low,其他,2020,
+V065,31.1939146,121.4442033220001,xujiahui,window,annotated,office,0,,4,high,建筑外形,2020,
+V066,31.1934759,121.4314120582873,xujiahui,window,annotated,education,0,,3,low,其他,2020,同款约 2 栋(自动识别)
+V067,31.19854764999999,121.4431850610909,xujiahui,window,annotated,office,0,,5,high,建筑外形,2020,
+V068,31.19351495,121.4300917955645,xujiahui,window,annotated,residential,0,,16,medium,其他,2020,
+V069,31.18862824999999,121.4352785367827,xujiahui,window,annotated,residential,0,,21,medium,建筑外形,2020,
+V070,31.19115274999999,121.4366348739669,xujiahui,window,annotated,residential,0,,17,high,建筑外形,2020,
+V071,31.189519,121.4296322246712,xujiahui,window,annotated,residential,0,,29,high,其他,2020,
+V072,31.19193325000001,121.4371334928702,xujiahui,window,annotated,residential,0,,18,high,其他,2020,
+V073,31.19170154999998,121.4427606399868,xujiahui,window,annotated,residential,0,,34,low,其他,2020,
+V074,31.19634439999999,121.4429425654204,xujiahui,window,annotated,residential,0,,31,low,其他,2020,同款约 2 栋(自动识别)
+V075,31.1988304,121.4292528013758,xujiahui,window,annotated,education,0,,4,medium,建筑外形,2020,
+V076,31.18923144999999,121.4357213754643,xujiahui,window,annotated,residential,0,,6,high,建筑外形,2020,同款约 3 栋(自动识别)
+V077,31.19471275,121.4307675474804,xujiahui,window,annotated,education,0,,3,low,其他,2020,
+V078,31.19895984999999,121.4350833611545,xujiahui,window,annotated,mixed_use,1,5,9,high,建筑外形,2020,
+V079,31.19776545,121.4422607377109,xujiahui,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V080,31.19883039999999,121.4410278256162,xujiahui,window,annotated,residential,0,2,24,high,建筑外形,2020,
+V081,31.11667285000001,121.3781833637735,xinzhuang,window,annotated,government_office,0,,2,high,建筑外形,2020,
+V082,31.11030739999999,121.3854840959223,xinzhuang,window,annotated,education,0,,2,high,建筑外形,2020,
+V083,31.11068364999999,121.3871095844492,xinzhuang,window,annotated,shopping_mall,0,,1,high,建筑外形,2020,
+V084,31.11438109999999,121.3842135234664,xinzhuang,window,annotated,shopping_mall,0,,2,medium,建筑外形,2020,
+V085,31.11448334999999,121.3813138,xinzhuang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V086,31.1097556,121.3792294561182,xinzhuang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V087,31.1171832,121.3774624769668,xinzhuang,window,annotated,shopping_mall,0,,1,high,建筑外形,2020,
+V088,31.11148914999998,121.39270991196,xinzhuang,window,annotated,shopping_mall,0,,1,high,建筑外形,2020,
+V089,31.1224833,121.3920233712743,xinzhuang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V090,31.11063830000001,121.384124861673,xinzhuang,window,annotated,residential,0,2,15,high,建筑外形,2020,
+V091,31.1165597,121.3922863,xinzhuang,window,annotated,residential,0,,18,high,建筑外形,2020,同款约 2 栋(自动识别)
+V092,31.11181875,121.3855043370778,xinzhuang,window,annotated,residential,0,1,5,high,建筑外形,2020,同款约 2 栋(自动识别)
+V093,31.12212709999999,121.3921506115037,xinzhuang,window,annotated,residential,0,,8,high,建筑外形,2020,
+V094,31.11499224999999,121.3790512575,xinzhuang,window,annotated,office,0,,12,high,建筑外形,2020,
+V095,31.1218152,121.3926643978233,xinzhuang,window,annotated,education,0,,3,high,建筑外形,2020,
+V096,31.11425374999999,121.3863201599109,xinzhuang,window,annotated,shopping_mall,0,,2,medium,建筑外形,2020,
+V097,31.11242355,121.3866818333597,xinzhuang,window,annotated,shopping_mall,0,,3,high,建筑外形,2020,
+V098,31.11099195,121.381950866135,xinzhuang,window,annotated,residential,0,,6,high,建筑外形,2020,
+V099,31.10930719999998,121.3860828157987,xinzhuang,window,annotated,residential,0,,7,high,建筑外形,2020,
+V100,31.11814244999999,121.3768338268502,xinzhuang,window,annotated,residential,0,,6,high,建筑外形,2020,同款约 3 栋(自动识别)
+V101,31.12192395,121.3936520523452,xinzhuang,window,annotated,residential,0,,17,high,建筑外形,2020,同款约 3 栋(自动识别)
+V102,31.12205345,121.3931669188328,xinzhuang,window,annotated,residential,0,,17,high,建筑外形,2020,同款约 3 栋(自动识别)
+V103,31.1213765,121.378787708998,xinzhuang,window,annotated,residential,0,,8,high,建筑外形,2020,同款约 7 栋(自动识别)
+V104,31.12166259999999,121.3786683394819,xinzhuang,window,annotated,residential,0,,8,low,建筑外形,2020,同款约 7 栋(自动识别)
+V105,31.12266344999999,121.3795815537383,xinzhuang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V106,31.1124677,121.3848992125016,xinzhuang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V107,31.10931194999999,121.3869013004633,xinzhuang,window,annotated,residential,0,,5,high,建筑外形,2020,同款约 2 栋(自动识别)
+V108,31.11454024999999,121.3849148811375,xinzhuang,window,annotated,residential,0,,8,high,建筑外形,2020,同款约 3 栋(自动识别)
+V109,31.11431059999999,121.3850905821382,xinzhuang,window,annotated,residential,0,,5,high,建筑外形,2020,同款约 3 栋(自动识别)
+V110,31.11262495,121.3840078664812,xinzhuang,window,annotated,residential,0,,5,high,建筑外形,2020,
+V111,31.11134694999999,121.3811805313561,xinzhuang,window,annotated,residential,0,,6,high,其他,2020,
+V112,31.1101861,121.3887037769401,xinzhuang,window,annotated,residential,0,,6,medium,其他,2020,同款约 5 栋(自动识别)
+V113,31.1224312,121.3904167485011,xinzhuang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V114,31.10970804999999,121.3853586836367,xinzhuang,window,annotated,residential,0,,12,medium,建筑外形,2020,
+V115,31.11514964999999,121.3804970186973,xinzhuang,window,annotated,residential,0,,12,high,建筑外形,2020,同款约 2 栋(自动识别)
+V116,31.1177784,121.3799722924055,xinzhuang,window,annotated,government_office,0,,6,high,建筑外形,2020,
+V117,31.11782759999999,121.3798660814018,xinzhuang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V118,31.1161519,121.380137312045,xinzhuang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V119,31.11008004999999,121.3763335612653,xinzhuang,window,annotated,residential,0,,16,high,建筑外形,2020,
+V120,31.11862494999999,121.3803606610304,xinzhuang,window,annotated,residential,0,,24,high,建筑外形,2020,
+V121,31.20515965,121.6045950788704,zhangjiang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V122,31.20773909999999,121.60809695,zhangjiang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V123,31.2094535,121.6050969747824,zhangjiang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V124,31.21031230000001,121.6065527693038,zhangjiang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V125,31.20734125,121.5967991094726,zhangjiang,window,annotated,shopping_mall,0,,2,high,建筑外形,2020,
+V126,31.1981701,121.6025279490041,zhangjiang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V127,31.19890309999999,121.6001717130697,zhangjiang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V128,31.19522935,121.6020590075572,zhangjiang,window,annotated,office,0,,13,high,建筑外形,2020,
+V129,31.19934994999999,121.6057472915961,zhangjiang,window,annotated,office,0,,1,low,建筑外形,2020,
+V130,31.19842305,121.6084077443069,zhangjiang,window,annotated,office,0,,1,low,建筑外形,2020,同款约 2 栋(自动识别)
+V131,31.19981934999999,121.61067095,zhangjiang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V132,31.1988822,121.6130348,zhangjiang,window,annotated,office,0,,1,medium,建筑外形,2020,
+V133,31.19761049999999,121.6060819481603,zhangjiang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V134,31.21127414999999,121.5968534071742,zhangjiang,window,annotated,office,0,,6,high,建筑外形,2020,
+V135,31.20693725,121.6083545525031,zhangjiang,window,annotated,office,0,,2,medium,建筑外形,2020,
+V136,31.20212014999999,121.5988646621499,zhangjiang,window,annotated,office,0,,6,medium,建筑外形,2020,
+V137,31.20258374999999,121.5994205222544,zhangjiang,window,annotated,office,0,,5,high,建筑外形,2020,
+V138,31.1983718,121.6019646947667,zhangjiang,window,annotated,office,0,,4,medium,建筑外形,2020,
+V139,31.2056456,121.6061975426894,zhangjiang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V140,31.20487874999999,121.6005727401539,zhangjiang,window,annotated,office,0,,4,medium,建筑外形,2020,
+V141,31.19810569999999,121.6121586606409,zhangjiang,window,annotated,shopping_mall,0,1,2,medium,建筑外形,2020,
+V142,31.19653369999999,121.6070736362957,zhangjiang,window,annotated,office,0,,4,high,建筑外形,2020,
+V143,31.19651919999999,121.6063220106159,zhangjiang,window,annotated,office,0,,4,high,建筑外形,2020,
+V144,31.19882895000001,121.6084575057737,zhangjiang,window,annotated,office,0,,2,medium,建筑外形,2020,同款约 2 栋(自动识别)
+V145,31.20011695,121.6131444215874,zhangjiang,window,annotated,office,0,,6,high,建筑外形,2020,
+V146,31.20574295,121.6133350323674,zhangjiang,window,annotated,office,0,1,8,high,建筑外形,2020,
+V147,31.20708424999999,121.6129825427166,zhangjiang,window,annotated,residential,0,,2,high,建筑外形,2020,
+V148,31.20859029999999,121.6134602488761,zhangjiang,window,annotated,education,0,,4,medium,建筑外形,2020,
+V149,31.19705139999999,121.60453195,zhangjiang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V150,31.20372894999998,121.6119397550472,zhangjiang,window,annotated,residential,0,,6,high,建筑外形,2020,同款约 4 栋(自动识别)
+V151,31.2064376,121.6103710550108,zhangjiang,window,annotated,residential,0,,6,high,建筑外形,2020,同款约 7 栋(自动识别)
+V152,31.20173359999999,121.607353318845,zhangjiang,window,annotated,residential,0,,6,high,建筑外形,2020,同款约 3 栋(自动识别)
+V153,31.20128224999999,121.6001759574029,zhangjiang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V154,31.1977359,121.6121999692132,zhangjiang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V155,31.19866219999999,121.604846951687,zhangjiang,window,annotated,office,0,,6,high,建筑外形,2020,
+V156,31.20949599999999,121.5978849326293,zhangjiang,window,annotated,other_public,0,,1,high,建筑外形,2020,
+V157,31.19737105,121.5953918956093,zhangjiang,window,annotated,office,0,,5,high,建筑外形,2020,
+V158,31.19729839999999,121.6092800038306,zhangjiang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V159,31.20225729999999,121.6024509608785,zhangjiang,window,annotated,residential,0,,18,high,建筑外形,2020,
+V160,31.1955322,121.5943767254446,zhangjiang,window,annotated,education,0,,10,high,建筑外形,2020,
+V161,30.90396434999999,121.918213937476,lingang,window,annotated,other_public,0,,1,medium,建筑外形,2020,
+V162,30.90093364999999,121.9201388717971,lingang,window,annotated,office,0,,2,high,建筑外形,2020,
+V163,30.91655605,121.90576105,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V164,30.91286385,121.9053500469311,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V165,30.91368825,121.9309975716332,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V166,30.91757355,121.9275618180313,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V167,30.9096932,121.9277116401899,lingang,window,annotated,government_office,0,6,12,medium,建筑外形,2020,同款约 7 栋(自动识别)
+V168,30.90948144999999,121.927352578828,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V169,30.92329444999999,121.9285735,lingang,window,annotated,residential,0,,18,high,其他,2020,同款约 9 栋(自动识别)
+V170,30.92104139999999,121.922276485177,lingang,window,annotated,education,0,,5,high,其他,2020,
+V171,30.9195439,121.9155394188776,lingang,window,annotated,residential,0,,4,high,建筑外形,2020,同款约 4 栋(自动识别)
+V172,30.9227003,121.9152917302054,lingang,window,annotated,residential,0,,8,medium,其他,2020,
+V173,30.92226375,121.9214024599553,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V174,30.92232985,121.9121395266197,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V175,30.92319765000001,121.9139986229026,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V176,30.91849665,121.9052729239951,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V177,30.92172349999999,121.9139732356639,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V178,30.92351204999999,121.9182245513513,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V179,30.90495965,121.9054089,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V180,30.90128195,121.90158435,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V181,30.90254389999999,121.9016690006081,lingang,window,annotated,residential,0,,4,high,建筑外形,2020,
+V182,30.91791879999998,121.9173602699638,lingang,window,annotated,residential,0,,8,medium,建筑外形,2020,
+V183,30.9211839,121.9191865247788,lingang,window,annotated,residential,0,,8,medium,建筑外形,2020,同款约 2 栋(自动识别)
+V184,30.91728269999999,121.9089521547133,lingang,window,annotated,education,0,,5,high,建筑外形,2020,
+V185,30.91612135,121.9138453434416,lingang,window,annotated,government_office,0,,1,medium,建筑外形,2020,
+V186,30.90077429999999,121.90471035,lingang,window,annotated,residential,0,,4,medium,建筑外形,2020,同款约 6 栋(自动识别)
+V187,30.90077775,121.90507965,lingang,window,annotated,residential,0,,4,medium,建筑外形,2020,同款约 6 栋(自动识别)
+V188,30.9068862,121.9081842,lingang,window,annotated,residential,0,,4,medium,建筑外形,2020,同款约 5 栋(自动识别)
+V189,30.91598844999998,121.9153596925362,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V190,30.9189259,121.9180940729128,lingang,window,annotated,residential,0,,4,medium,建筑外形,2020,同款约 6 栋(自动识别)
+V191,30.91719694999999,121.9241248268966,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V192,30.91972614999999,121.9313129328162,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V193,30.9241972,121.9302753724612,lingang,window,annotated,residential,0,,18,medium,其他,2020,
+V194,30.92418224999999,121.91112545,lingang,window,annotated,residential,0,,8,high,其他,2020,
+V195,30.92347644999999,121.91077295,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V196,30.92361234999999,121.9104430839121,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V197,30.92501064999999,121.90837965,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V198,30.9130937,121.9280753586572,lingang,window,not_found,,,,,,,,无法定位:街景影像(约2020年)早于建成或无覆盖;2026-07-03 记录
+V199,30.9080465,121.921799721899,lingang,window,annotated,shopping_mall,0,,2,high,建筑外形,2020,
+V200,30.90358544999999,121.90609205,lingang,window,annotated,shopping_mall,0,,3,high,建筑外形,2020,同款约 2 栋(自动识别)
