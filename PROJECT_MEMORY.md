@@ -15,6 +15,7 @@ for the active milestone. The owner updates this after each strategy session._
 - **Current phase:** Phase 1 数据采集 **9/9 完成**(2026-07-03,validation set #9 入库记账收官)。Skeleton (PR #1), workflow scaffolding (PR #2), iron rule (PR #3), POI mapping dictionary (PR #4) merged; OSM / Microsoft footprints / CNBH-10m 三个 fallback 源已于 2026-06-21 决策 dropped(见 §4)。下一步进入 Module A 数据处理流水线实施。
 - **Active milestone:** Module A — Data Acquisition. Collect 7 external data sources and place under `data/raw/` per `data/raw/README.md`, then produce a coverage-reported `outputs/geojson/master.geojson`.
 - **Definition of done for this milestone:** All 7 data sources committed (or noted in `data/raw/README.md` as acquired but gitignored), and one full Module A run produces `master.geojson` with documented coverage statistics (% labeled / % ML-predicted / % unknown / % height-complete). [`config/poi_mapping.yaml` ✓ merged in PR #4, 2026-06-20]
+- **已锁定设计基线**(2026-06-18 决策,自 §2 归档):mixed_use 按裙楼商业 + 塔楼办公垂直复合体建模(非单一 archetype,`config/archetypes.yaml`);住宅 mid_rise / high_rise 分界 10 层(GB 50016-2014 / GB 50352-2019,`config/archetypes.yaml` globals.floor_count_cutoff);双轨校准目标公建 ±10% monthly NMBE / 住宅 ±20% annual NMBE(仿 Lyu et al. 2026,`config/calibration_targets.yaml`);纯 Python IDF 流水线 eppy/geomeppy/honeybee-energy、无 Rhino/Grasshopper(`pyproject.toml`)。
 
 ---
 
@@ -31,10 +32,8 @@ line, and whether it has been encoded in the repo (commit / config / doc)._
 | 2026-07-01 | 采用 One Click LCA + China localization 作为 5 材料 EPD 源;从 6 个 Design 导出后跨类别剔除 140 条非建筑 SKU(铁路/桥梁/围栏/路障/屋面瓦/陶土面砖),合并为 486 rows 的 master 表 | 唯一批量提供中国区 EPD 的商业库(已持有 license);`APPLYLOCALCOMPS: china` + IEA 2023 中国电网自动本地化;统一到 kgCO2e/kg,EOL 双轨(C4 混凝土/玻璃/砖类,C3 钢/铝,C3-balancing CMU/mid-density block) | `data/raw/epd_oneclick/Building_EPD.xlsx` + README |
 | 2026-06-21 | Residential benchmark 改用 GB/T 51161 + 上海阶梯电价 + 上海统计公报 + Hu & Yan 2016 Energy Policy,放弃原计划的清华 CBEM 2025 | 公开政府文件 + 顶刊论文引用规范度优于工具书;数据时点对齐(2024 上海)优于 CBEM 整本 2023 年统计;能精确折算 per-area EUI(GB 户 → 上海户均面积 98.4 m²) | `data/raw/benchmark/residential_annual_eui.csv` |
 | 2026-06-20 | POI category → archetype mapping dictionary completed (869 codes → 14 archetypes, 0 unknown) | Key calls: 金融保险→office (ATM single-out skip); 综合市场→shopping_mall (no wet_market archetype); 宿舍→residential (Wang et al. 144 不收宿舍); 商住两用→mixed_use prior | `config/poi_mapping.yaml` (PR #4) |
-| 2026-06-18 | Mixed-use modeled as podium retail + tower office vertical composite (not a single archetype) | Wang et al. 综合建筑 monthly EUI is closer to office than to pure retail; ~22.5% of monitored floor area justifies first-class treatment | `config/archetypes.yaml` mixed_use |
-| 2026-06-18 | Residential mid_rise vs high_rise cutoff set at 10 storeys | Aligns with GB 50016-2014 / GB 50352-2019 fire-safety definition of 高层住宅 | `config/archetypes.yaml` globals.floor_count_cutoff |
-| 2026-06-18 | Dual-track calibration: public buildings ±10% monthly NMBE, residential ±20% annual NMBE | Mirrors Lyu et al. 2026 mixed-precision approach; reflects the residential data availability gap | `config/calibration_targets.yaml` |
-| 2026-06-18 | Pure-Python IDF generation pipeline (eppy/geomeppy/honeybee-energy), no Rhino/Grasshopper | Reproducibility + batch scalability + removes licensing barrier for Chinese institutions | `pyproject.toml` runtime deps |
+
+_2026-06-18 的四条基础设计决策(mixed_use 垂直复合体、10 层住宅分界、双轨校准目标、纯 Python IDF 流水线)已压缩归档至 §1「已锁定设计基线」。_
 
 ---
 
