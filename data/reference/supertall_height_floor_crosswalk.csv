@@ -1,0 +1,24 @@
+﻿# Module C 超高层人工替换名单种子 — 2026 height(top20) × 2023 FLOOR 空间对照,坐标系 WGS84 (EPSG:4326)
+# 生成:scripts/floor_semantics.py 第二路方法,2026-07-05;FLOOR=2×实际层数(implied_floors=FLOOR//2)
+# status: confirmed=层数+区位锚定地标 / 待人肉=需 owner 街景核认;match_via 记匹配方式,错配风险见 2023 README 已知局限
+height_2026_m,area_2026_m2,district,lon_wgs84,lat_wgs84,floor_2023,implied_floors,suspected_landmark,status,note,match_via
+415,2609.7,浦东新区,121.50137,31.237206,176,88,"金茂大厦(88层,实高420.5m)",confirmed,height=415 系顶端截断,centroid_in_polygon
+415,6027.3,浦东新区,121.50088,31.237329,20,10,,待人肉,"质心对到 FLOOR=20,疑裙房错配",centroid_in_polygon
+388,4180.2,徐汇区,121.429188,31.195139,,,,待人肉,"2023 无对应footprint,疑2023后建成",no_match_2023
+385,12301.2,浦东新区,121.495261,31.241904,140,70,,待人肉,,centroid_in_polygon
+361,15755.8,浦东新区,121.503268,31.2366,202,101,"环球金融中心(101层,实高492m)",confirmed,2026 height=361 严重偏低,centroid_in_polygon
+351,5901.5,浦东新区,121.50132,31.235561,236,118,"上海中心(118层常见标注,实高632m)",confirmed,2026 height=351 严重偏低,centroid_in_polygon
+351,9260.8,浦东新区,121.500657,31.235816,10,5,,待人肉,"质心对到 FLOOR=10,疑裙房错配",centroid_in_polygon
+304,2726.4,静安区,121.44956,31.229894,152,76,,待人肉,,centroid_in_polygon
+264,2544.3,虹口区,121.493583,31.251185,132,66,"白玉兰广场(66层,实高320m)",confirmed,虹口区位吻合,centroid_in_polygon
+256,844.9,浦东新区,121.499576,31.241333,128,64,,待人肉,,centroid_in_polygon
+252,2607.3,静安区,121.451573,31.233192,126,63,,待人肉,,centroid_in_polygon
+240,3417.1,徐汇区,121.430155,31.19565,,,,待人肉,"2023 无对应footprint,疑2023后建成",no_match_2023
+240,4889.0,黄浦区,121.468983,31.225543,120,60,,待人肉,,centroid_in_polygon
+236,1697.2,静安区,121.448445,31.230025,118,59,,待人肉,,centroid_in_polygon
+232,2318.6,浦东新区,121.502183,31.24327,116,58,,待人肉,,centroid_in_polygon
+232,1930.2,长宁区,121.41246,31.220698,116,58,,待人肉,,centroid_in_polygon
+224,3805.2,浦东新区,121.478059,31.153412,4,2,,待人肉,"质心对到 FLOOR=4,疑裙房错配",centroid_in_polygon
+224,2832.6,浦东新区,121.49774,31.239044,112,56,,待人肉,,centroid_in_polygon
+220,1406.4,静安区,121.444208,31.228738,110,55,,待人肉,,centroid_in_polygon
+220,2507.8,长宁区,121.40045,31.206628,110,55,,待人肉,,centroid_in_polygon
