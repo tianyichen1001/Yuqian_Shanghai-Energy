@@ -27,13 +27,13 @@ line, and whether it has been encoded in the repo (commit / config / doc)._
 
 | Date | Decision | Rationale | Encoded in |
 |---|---|---|---|
+| 2026-07-05 | **FLOOR = 2×实际层数定案**(2023 集),换算 floors=FLOOR//2;旧过滤规则「FLOOR>130→NA」作废,9 行改判合法超高层校准点 | 三路证据:地标锚点 176/88 金茂、202/101 环球、236/118 上海中心、132/66 白玉兰(决定性);万对抽样隐含层高中位 4.0 m、86.7% 落 2.5–5 m;validation 132 样本中位 ratio 恰 2.000;全表 0 奇数指纹 | `data/raw/taobao/shanghai_2023_floor/README.md` + `scripts/floor_semantics.py` |
+| 2026-07-05 | **金茂悬案销案**:金茂大厦以 height=415(顶端截断)入库 2026 集(Area 2,610 m² 那栋,FLOOR 锚点 176→88 层) | 空间对照锁定;同法实锤 2026 超高层高度乱序(上海中心 632m 入库 351、环球 492m 入库 361) | `data/reference/supertall_height_floor_crosswalk.csv` |
 | 2026-07-04 | 云端数据通道**改道定案**:Release 存档 + Codespace 云到云中转 + git 树取用;PAT 机制退役;MD5 对暗号机制保留 | 会话 GitHub 网关 403 证伪 Release API 直下(07-02「实测打通」系记账夸大);git 通道用会话自带授权,07-04 端到端实测成功 | §4.6 |
 | 2026-07-04 | ep 字段鉴定为 **14 值分类编码,严禁作层数使用**;2026 集行数定案 **843,062**(供应商宣传 843,063 多记 1) | 三重证据否定层数假设(14 离散值 / height÷ep 中位 1.33 m / 415m 双塔 ep=2 而非 ≈128/101);行数 DBF+SHX+geopandas 三方互证 | `data/raw/taobao/shanghai_2026_height/README.md` + `scripts/ep_investigation.py` |
 | 2026-07-03 | Validation set #9 以 **156 annotated + 44 not_found** 记账收官(核实率 156/200) | 44 栋无法定位系街景影像(约 2020)早于建成,集中临港/张江;两处修正:V002 层数按最高塔记 23、V061 补勾 mixed_use 综合体 | `data/raw/validation/`(master.xlsx + v0.csv + README.md, commit 直入 main) |
-| 2026-07-03 | 临港窗口规格由 30–50 栋修订为 **20 栋** + 以 2023 Taobao FLOOR 集为主力校准 + 补抽预案留档 | 临港 40 抽样中 20 栋 not_found(影像早于建成),不立即补抽;预案(lingang 窗口、剔除已用行号、height 分层、seed=43)触发条件:Module A 临港层数推断与本集 20 栋显著不符 | `data/raw/validation/README.md` §补抽预案 |
-| 2026-07-01 | 采用 One Click LCA + China localization 作为 5 材料 EPD 源;从 6 个 Design 导出后跨类别剔除 140 条非建筑 SKU(铁路/桥梁/围栏/路障/屋面瓦/陶土面砖),合并为 486 rows 的 master 表 | 唯一批量提供中国区 EPD 的商业库(已持有 license);`APPLYLOCALCOMPS: china` + IEA 2023 中国电网自动本地化;统一到 kgCO2e/kg,EOL 双轨(C4 混凝土/玻璃/砖类,C3 钢/铝,C3-balancing CMU/mid-density block) | `data/raw/epd_oneclick/Building_EPD.xlsx` + README |
 
-_2026-06-18 的四条基础设计决策(mixed_use 垂直复合体、10 层住宅分界、双轨校准目标、纯 Python IDF 流水线)已压缩归档至 §1「已锁定设计基线」。2026-06-20 POI 映射字典与 2026-06-21 residential benchmark 两条决策随滚动裁剪出表,内容已编码于 §1 / §4 对应行(`config/poi_mapping.yaml` PR #4;`data/raw/benchmark/residential_annual_eui.csv`)。_
+_2026-06-18 的四条基础设计决策(mixed_use 垂直复合体、10 层住宅分界、双轨校准目标、纯 Python IDF 流水线)已压缩归档至 §1「已锁定设计基线」。2026-06-20 POI 映射字典、2026-06-21 residential benchmark、2026-07-03 临港窗口 20 栋修订、2026-07-01 One Click LCA EPD 源四条决策随滚动裁剪出表,内容已编码于 §1 / §4 对应行及 `data/raw/validation/README.md` §补抽预案、`data/raw/epd_oneclick/`。_
 
 ---
 
@@ -58,7 +58,7 @@ inputs Module A depends on._
 | Source | Status | Location | Last updated |
 |---|---|---|---|
 | Taobao buildings 2026 (all 16 districts, height) | **ingested 2026-07-04 via 云端 git 通道**(**843,062** buildings —— 实测定案,供应商宣传 843,063 多记 1,DBF+SHX+geopandas 三方互证;WGS84 ✓复测 EPSG:4326;height=4-415m ⚠️超高层段整体失真见 README QC 07-04 升级说明;ep=14 值分类编码禁作层数;encoding=utf-8 per .cpg;zip MD5: 81EBFC2B... 命中暗号,.shp MD5: ED87E281... 与本地版同一文件;gitignored per SOP) | `data/raw/taobao/shanghai_2026_height/README.md` | 2026-07-04 |
-| Taobao buildings 2023 (central, FLOOR) | acquired locally (412,100 buildings, WGS84, FLOOR=2-236 w/ <0.1% outliers >128, MD5: 674A7662..., gitignored per SOP) — used as Height→Floor calibration set | `data/raw/taobao/shanghai_2023_floor/README.md` | 2026-06-21 |
+| Taobao buildings 2023 (central, FLOOR) | **ingested 2026-07-05 via 云端 git 通道**(**412,099** buildings —— 实测定案,供应商宣传 412,100 多记 1;WGS84 ✓复测;schema 极简仅 FLOOR+geometry;**FLOOR=2×实际层数定案**,floors=FLOOR//2,全表偶数指纹;zip MD5: 6E033592... 命中暗号,.shp MD5: 674A7662... 与本地版同一文件;gitignored per SOP)— Height→Floor 校准集 | `data/raw/taobao/shanghai_2023_floor/README.md` | 2026-07-05 |
 | Taobao / Amap POI | Amap personal-dev key acquired (held locally, not in Git); fetch deferred to Module A | `data/raw/amap/` | 2026-06-20 |
 | OpenStreetMap buildings (fallback) | **dropped**(2026-06-21 决策,§8.1;Taobao 2026 全市覆盖后 fallback 不再需要) | `data/raw/osm/`(空,保留 README 约定) | 2026-07-03 |
 | Microsoft Global ML Building Footprints | **dropped**(2026-06-21 决策,§8.1;同上) | `data/raw/ms_buildings/`(空,保留 README 约定) | 2026-07-03 |
@@ -123,11 +123,29 @@ which it migrates to §2 Recent Decisions as a row._
 
 - [@owner, surfaced 2026-06-20 from Amap API test] **Multi-typecode POI 计票策略**:实测发现单个 POI 可能有多个 typecode(`|` 分隔),例:"上海东方明珠广播电视塔有限公司" 的 typecode = `170200|141300|141100`,会同时贡献 office × 2 + education × 1。模块 A 实现 `poi_seeding.py` 时需决定计票方案:(A) 每 typecode 算 1 票,(B) 只用第一个,(C) 1/N 票均分,(D) 多 typecode 视为 mixed_use 信号。当前倾向方案 C(投票权守恒),待模块 A 跑通后用实际数据分布验证。
 - [@owner, surfaced 2026-07-04 from A1 ep 侦查] **ep 字段语义待向供应商核实**:14 值分类编码 {1,2,4,6,7,8,9,10,11,12,13,14,18,26},疑似高度/体量档位(ep=2 ≈ 约百米以上高楼专属);已定案禁作层数,但确切语义未知。详见 2026 README + `scripts/ep_investigation.py`。
-- [@owner, surfaced 2026-07-04 from A1 QC] **金茂大厦入库 height 值待 Module A 中人肉锁定**:实际 420.5 m 未出现在 ≥410 区间,疑以浦东 385/361/351 梯队中某值入库;需结合坐标人肉比对锁定,作为超高层失真的定标样本。
-- [@owner, surfaced 2026-07-04 from A1 QC] **超高层人工核对名单的具体规则待 Module C 前定**:height 阈值(如 ≥200 m)、名单来源(CTBUH/官方名录)、核对与替换流程均未定;超高层段高度整体不可信,Module C 仿真前必须完成。
+- ~~[金茂入库值]~~ **销案 2026-07-05**:金茂以 height=415(截断)入库,见 §2 决策行与 `data/reference/supertall_height_floor_crosswalk.csv`。
+- [@owner, surfaced 2026-07-04 from A1 QC] **超高层人工核对名单的具体规则待 Module C 前定**:height 阈值(如 ≥200 m)、名单来源(CTBUH/官方名录)、核对与替换流程均未定;超高层段高度整体不可信,Module C 仿真前必须完成。种子表已入库 `data/reference/supertall_height_floor_crosswalk.csv`(top 20,4 栋 confirmed)。
+- [@owner, surfaced 2026-07-05 from A2 侦查] **height=415 / Area 6,027 m² 那栋身份待认领**:与金茂并列的另一栋 415,质心对到 2023 FLOOR=20(疑裙房错配),crosswalk 表中标"待人肉"。
+- [@owner, surfaced 2026-07-05 from A2 侦查] **validation 对表 7–12 层段 ratio=1.0 异常(n=13)**:该分箱中位 FLOOR÷标注 =1.0 而非 2.0,样本小且混有错配,未定性;A5 时用 369,035 对全量空间配对分层复查。
+
+---
+
+## 7. 双数据集策略(部分镜像)
+
+> 注:仓库镜像原无 §7(长版在 claude.ai),以下按 owner 口述编号落地 §7.7 / §7.12;其余子节待 owner 同步。
+
+### 7.7 双数据集角色与字段口径(2026-07-05 更新)
+
+- **2023 集(FLOOR)**:**FLOOR = 2×实际层数定案**,换算式 `floors = FLOOR // 2`;旧 outlier 规则「FLOOR>130→NA」**作废**,该 9 行(隐含 66–118 层)改判为**超高层校准点**。角色不变:Height→Floor 经验层高分布的校准集。三路证据与复现:`scripts/floor_semantics.py`、`data/raw/taobao/shanghai_2023_floor/README.md`。
+- **2026 集(height)**:**超高层高度乱序实锤**(不只截断)——上海中心(实高 632 m)入库 351、环球金融中心(实高 492 m)入库 361、金茂以 415 截断入库;≥200 m 段数值与真实高度普遍脱钩。Module C 人工替换名单种子见 `data/reference/supertall_height_floor_crosswalk.csv`(top 20,含 WGS84 坐标,4 栋 confirmed)。
+- **关联方式**:两集无公共属性键(仅 geometry),只能空间 join;两版 footprint 切分不一致,塔楼密集区错配率不可忽略(A5 ETL 设计时按 2023 README「已知局限」处理)。
+
+### 7.12 validation set 空间覆盖备注
+
+- 2026-07-05 A2 对表实测:validation 200 点对 2023 集 point-in-polygon + 10 m 最近邻共匹配 153,未匹配 47,其中**临港 35/40 属预期**(2023 仅覆盖市区);其余为张江 5、莘庄 3、陆家嘴 3、徐家汇 1(疑 2020 街景后新建或几何缺失)。
 
 ---
 
 ## 下次 session 起点
 
-A2:2023 数据集上云(走 Codespace 拖拽通道入数据仓库 git 树)+ POI bulk fetch + Stage 1 七步。
+A3(高德 POI bulk fetch,key 走 session env var)**或** A4(EULUC 上海切片)—— 先后顺序由 owner 定,开工时指定。
