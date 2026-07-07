@@ -1,0 +1,12 @@
+class,level_ii_code,level_ii_name_en,level_ii_name_zh,notes
+0,101,Residential,居住,houses/apartments
+1,201,Business office,商务办公,offices; finance/tech commercial workspace
+2,202,Commercial service,商业服务,"retail, restaurants, hotels, entertainment (bundled)"
+3,301,Industrial,工业,"manufacturing, warehouse"
+4,401,Transportation station,交通站点,"bus, train stations"
+5,402,Airport facilities,机场设施,airports
+6,501,Administrative,行政办公,"gov, military, public agencies"
+7,502,Educational,教育,"schools, universities"
+8,503,Medical,医疗,hospitals
+9,504,Sport and cultural,体育文化,"gyms, museums, libraries, stadiums"
+10,601,Park and greenspace,公园绿地,parks

@@ -147,3 +147,7 @@ data/raw/taobao/**/*.zip
 
 # Ephemeral working data (never commit)
 scratch_data/
+
+# A4 EULUC-China 2.0 Shanghai clip (>100 MB, stored in private data repo per §4.6)
+data/raw/euluc/*.gpkg
+data/raw/euluc/*.gpkg.tmp
