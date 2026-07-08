@@ -12,7 +12,7 @@
 _Current phase, headline goal of the current sprint, and what counts as "done"
 for the active milestone. The owner updates this after each strategy session._
 
-- **Current phase:** Phase 1 数据采集 **9/9 完成**(2026-07-03,validation set #9 入库记账收官)。Skeleton (PR #1), workflow scaffolding (PR #2), iron rule (PR #3), POI mapping dictionary (PR #4) merged; OSM / Microsoft footprints / CNBH-10m 三个 fallback 源已于 2026-06-21 决策 dropped(见 §4)。下一步进入 Module A 数据处理流水线实施。
+- **Current phase:** Phase 1 数据采集 **9/9 完成**(2026-07-03);**Module A 进行中 3/6**(A1 ✅ 2026-07-04 + A2 ✅ 2026-07-05 + **A4 ✅ 2026-07-07**)。Skeleton (PR #1), workflow scaffolding (PR #2), iron rule (PR #3), POI mapping dictionary (PR #4) merged; OSM / Microsoft footprints / CNBH-10m 三个 fallback 源已于 2026-06-21 决策 dropped(见 §4)。下一站:**A3 批量执行**(pilot v1/v2 已通过,方案 α' 定向抓 060000+100000)+ A5。
 - **Active milestone:** Module A — Data Acquisition. Collect 7 external data sources and place under `data/raw/` per `data/raw/README.md`, then produce a coverage-reported `outputs/geojson/master.geojson`.
 - **Definition of done for this milestone:** All 7 data sources committed (or noted in `data/raw/README.md` as acquired but gitignored), and one full Module A run produces `master.geojson` with documented coverage statistics (% labeled / % ML-predicted / % unknown / % height-complete). [`config/poi_mapping.yaml` ✓ merged in PR #4, 2026-06-20]
 - **已锁定设计基线**(2026-06-18 决策,自 §2 归档):mixed_use 按裙楼商业 + 塔楼办公垂直复合体建模(非单一 archetype,`config/archetypes.yaml`);住宅 mid_rise / high_rise 分界 10 层(GB 50016-2014 / GB 50352-2019,`config/archetypes.yaml` globals.floor_count_cutoff);双轨校准目标公建 ±10% monthly NMBE / 住宅 ±20% annual NMBE(仿 Lyu et al. 2026,`config/calibration_targets.yaml`);纯 Python IDF 流水线 eppy/geomeppy/honeybee-energy、无 Rhino/Grasshopper(`pyproject.toml`)。
@@ -27,13 +27,13 @@ line, and whether it has been encoded in the repo (commit / config / doc)._
 
 | Date | Decision | Rationale | Encoded in |
 |---|---|---|---|
+| 2026-07-07 | **A3 战略重排 α'**:废原扫 EULUC Class 2 商业方案(交叉验证暴露漏 92% 商场——12 栋 validation 商场只 1 栋落 Class 2);改为在 Class 0+1+2 面积并集内定向抓 `060000 购物` + `100000 住宿` 两类,预算 ~5,800/月 | `data/raw/euluc/README.md`(交叉验证结论段)+ 待写的 A3 批量脚本 |
+| 2026-07-07 | **A4 EULUC 上海市界切片收官**:Zenodo 3.1 GB → GADM 4.1 市界内 55,124 parcels / 4,267.8 km²(占官方 6,340 的 67%);schema 定案仅 `Class(int8)+geometry`(原多字段档案作废);11 类 Class 编码破译;GPKG zip 通道 deflate 45%(103→54 MB)三段旅程 MD5 无损上私仓 | 主仓 `c3609f6` + 私仓 `9eea025`;`data/raw/euluc/README.md` + `data/reference/euluc_class_mapping.csv` |
 | 2026-07-05 | **FLOOR = 2×实际层数定案**(2023 集),换算 floors=FLOOR//2;旧过滤规则「FLOOR>130→NA」作废,9 行改判合法超高层校准点 | 三路证据:地标锚点 176/88 金茂、202/101 环球、236/118 上海中心、132/66 白玉兰(决定性);万对抽样隐含层高中位 4.0 m、86.7% 落 2.5–5 m;validation 132 样本中位 ratio 恰 2.000;全表 0 奇数指纹 | `data/raw/taobao/shanghai_2023_floor/README.md` + `scripts/floor_semantics.py` |
 | 2026-07-05 | **金茂悬案销案**:金茂大厦以 height=415(顶端截断)入库 2026 集(Area 2,610 m² 那栋,FLOOR 锚点 176→88 层) | 空间对照锁定;同法实锤 2026 超高层高度乱序(上海中心 632m 入库 351、环球 492m 入库 361) | `data/reference/supertall_height_floor_crosswalk.csv` |
 | 2026-07-04 | 云端数据通道**改道定案**:Release 存档 + Codespace 云到云中转 + git 树取用;PAT 机制退役;MD5 对暗号机制保留 | 会话 GitHub 网关 403 证伪 Release API 直下(07-02「实测打通」系记账夸大);git 通道用会话自带授权,07-04 端到端实测成功 | §4.6 |
-| 2026-07-04 | ep 字段鉴定为 **14 值分类编码,严禁作层数使用**;2026 集行数定案 **843,062**(供应商宣传 843,063 多记 1) | 三重证据否定层数假设(14 离散值 / height÷ep 中位 1.33 m / 415m 双塔 ep=2 而非 ≈128/101);行数 DBF+SHX+geopandas 三方互证 | `data/raw/taobao/shanghai_2026_height/README.md` + `scripts/ep_investigation.py` |
-| 2026-07-03 | Validation set #9 以 **156 annotated + 44 not_found** 记账收官(核实率 156/200) | 44 栋无法定位系街景影像(约 2020)早于建成,集中临港/张江;两处修正:V002 层数按最高塔记 23、V061 补勾 mixed_use 综合体 | `data/raw/validation/`(master.xlsx + v0.csv + README.md, commit 直入 main) |
 
-_2026-06-18 的四条基础设计决策(mixed_use 垂直复合体、10 层住宅分界、双轨校准目标、纯 Python IDF 流水线)已压缩归档至 §1「已锁定设计基线」。2026-06-20 POI 映射字典、2026-06-21 residential benchmark、2026-07-03 临港窗口 20 栋修订、2026-07-01 One Click LCA EPD 源四条决策随滚动裁剪出表,内容已编码于 §1 / §4 对应行及 `data/raw/validation/README.md` §补抽预案、`data/raw/epd_oneclick/`。_
+_2026-06-18 的四条基础设计决策(mixed_use 垂直复合体、10 层住宅分界、双轨校准目标、纯 Python IDF 流水线)已压缩归档至 §1「已锁定设计基线」。2026-06-20 POI 映射字典、2026-06-21 residential benchmark、2026-07-01 One Click LCA EPD 源、2026-07-03 临港窗口 20 栋修订 + validation 156+44 收官、2026-07-04 ep 字段鉴定为分类编码六条决策随滚动裁剪出表,内容已编码于 §1 / §4 对应行、`data/raw/validation/README.md` §补抽预案、`data/raw/epd_oneclick/`、`data/raw/taobao/shanghai_2026_height/README.md` + `scripts/ep_investigation.py`。_
 
 ---
 
@@ -43,6 +43,7 @@ _Cross-PR running list of things the owner has agreed to do, things waiting on
 external data, and things explicitly deferred. One bullet per item with the
 owner ("@owner" / "@claude-code") and a one-line status._
 
+- [@owner + @codespace] **A3 高德 POI bulk fetch(方案 α' 定向版)**:pilot v1/v2 已通过(2026-07-07);批量脚本待写。执行环境主仓 Codespace(`~/euluc/` 已有 EULUC 上海 GPKG);抓取 mask = EULUC Class 0+1+2 面积并集(~800 km² 内中环密集区);typecode 缩减到 `060000|100000` 两类;网格 1km × 1km,内置 GCJ-02↔WGS84 转换 + 自适应细分 + 断点续传;预算 ~5,800/月(免费 5,000 略超,待决定是否走高德个人实名认证提额);产出 `data/raw/amap/poi_shanghai_2022_focused.geojson`(主仓直进 git 树);详见 §2 决策 + `data/raw/euluc/README.md` 交叉验证结论。
 - [@owner] 设定综合体 (mixed_use) 的 POI 类目多样性熵阈值 — 模块 A POI 计票实现后再定。先验参考:Wang et al. 2026 综合建筑占上海监测面积 22.5%。
 - [~~done 2026-07-03~~] Validation set #9:人工标注 200 行已完成并入库记账(156 annotated + 44 not_found),定稿在 `data/raw/validation/`(master.xlsx + v0.csv + README.md)。详见 §2 决策与 §4 第 9 源。
 - [@deferred] Phase 7: Buildings.shanghai 公开平台 — fork City-Syntax/buildings.city framework + 套上海数据 + 部署。1-2 周工作量,等 Phase 1-6 全部跑完再启动。
@@ -63,7 +64,7 @@ inputs Module A depends on._
 | OpenStreetMap buildings (fallback) | **dropped**(2026-06-21 决策,§8.1;Taobao 2026 全市覆盖后 fallback 不再需要) | `data/raw/osm/`(空,保留 README 约定) | 2026-07-03 |
 | Microsoft Global ML Building Footprints | **dropped**(2026-06-21 决策,§8.1;同上) | `data/raw/ms_buildings/`(空,保留 README 约定) | 2026-07-03 |
 | CNBH-10m / 3D-GloBFP height raster | **dropped**(2026-06-21 决策,§8.1;Taobao 2026 自带 height,fallback 不再需要) | `data/raw/cnbh/`(空,保留 README 约定) | 2026-07-03 |
-| EULUC-China land use | acquired locally (v2.0, 3.1 GB GPKG, MD5-verified, gitignored per SOP); README scaffolded in repo | `data/raw/euluc/README.md` (full GPKG stored outside repo at owner's `E:\Energy\Yuqian_Shanghai_Energy_data\`) | 2026-06-21 |
+| EULUC-China land use | **ingested 2026-07-07 via A4 收官**(**55,124 parcels / 4,267.8 km²** 覆盖上海市界内,占官方 6,340 的 67%;GADM 4.1 `NAME_1==Shanghai` 切片;**schema 定案仅 `Class(int8)+geometry` 两列**;11 类 Class 编码破译入库 `data/reference/euluc_class_mapping.csv`;**交叉验证 156 栋 validation 87% 匹配**,单一功能 archetype 60–77% 命中 / 综合体 <10% 命中——parcel-level vs building-level 张力,论文 Methods 素材;GPKG 99 MB gitignored,zip 54 MB(deflate 45%)MD5 `0af6391f...` 上私仓 git 树 `9eea025`) | 主仓 `data/raw/euluc/README.md` + `data/reference/euluc_class_mapping.csv`(`c3609f6`);私仓 `Yuqian_Shanghai-Energy-data/euluc_shanghai_2022.gpkg.zip` | 2026-07-07 |
 | Wang et al. 2026 monthly EUI (144 points) | ingested (12 archetypes × 12 months, sanity-checked vs published annual within ±0.2 kWh/m²) | `data/raw/benchmark/wang_2026_public_monthly.csv` | 2026-06-21 |
 | Residential annual benchmarks | ingested (GB/T 51161 约束值 + 上海发改委阶梯电价档位 + 上海统计公报 + Hu & Yan 2016 Energy Policy 采暖占比;原计划的清华 CBEM 2025 评估后改用上述公开源,引用更规范) | `data/raw/benchmark/residential_annual_eui.csv` | 2026-06-21 |
 | One Click LCA China EPDs | ingested (486 rows across 6 materials: concrete_readymix 96 + concrete_precast 133 + glass 16 + steel 74 + aluminum 81 + bricks_masonry 86; 剔除 140 条非建筑 SKU;统一到 kgCO2e/kg;EOL 双轨 C3/C4) | `data/raw/epd_oneclick/Building_EPD.xlsx` | 2026-07-01 |
@@ -79,6 +80,7 @@ inputs Module A depends on._
 3. **PAT 机制退役**:git 通道使用会话自带授权,无需任何钥匙;不再签发/传递 DATA_PAT。
 4. **MD5 对暗号机制保留不变**:zip 落地后逐字符比对暗号,不一致立即停止、不解压。(07-04 实测:zip MD5 `81EBFC2B...` 命中暗号;sha256 与 Release digest 一致;内层 .shp MD5 `ED87E281...` 与 owner 本地 QC 版本为同一文件。)
 5. **教训**:通道类结论必须端到端跑通才可标「打通」。
+6. **GPKG zip 通道经验(07-07 A4 实证)**:大 GPKG 走 zip 打包 push git 树,SQLite 二进制 gzip deflate 实测 45%(103 MB → 54 MB),优于预估 30–40%;54 MB 单文件在 100 MB 硬限内 push 成功(GitHub 会警告"建议 <50 MB 走 LFS"但不阻塞)。**主仓 Codespace → 本地下载 → 私仓 Codespace 上传**三段旅程 MD5 位对位无损。90–100 MB 量级 GPKG 数据可复用此路径。
 
 ---
 
@@ -127,6 +129,8 @@ which it migrates to §2 Recent Decisions as a row._
 - [@owner, surfaced 2026-07-04 from A1 QC] **超高层人工核对名单的具体规则待 Module C 前定**:height 阈值(如 ≥200 m)、名单来源(CTBUH/官方名录)、核对与替换流程均未定;超高层段高度整体不可信,Module C 仿真前必须完成。种子表已入库 `data/reference/supertall_height_floor_crosswalk.csv`(top 20,4 栋 confirmed)。
 - [@owner, surfaced 2026-07-05 from A2 侦查] **height=415 / Area 6,027 m² 那栋身份待认领**:与金茂并列的另一栋 415,质心对到 2023 FLOOR=20(疑裙房错配),crosswalk 表中标"待人肉"。
 - [@owner, surfaced 2026-07-05 from A2 侦查] **validation 对表 7–12 层段 ratio=1.0 异常(n=13)**:该分箱中位 FLOOR÷标注 =1.0 而非 2.0,样本小且混有错配,未定性;A5 时用 369,035 对全量空间配对分层复查。
+- - [@owner + @codespace, surfaced 2026-07-07 from A4 交叉验证] **mixed_use 综合体识别策略**:EULUC parcel-level 分类把综合体裙楼商业信号吞进主导功能——5 栋 validation 综合体里 4 栋落 Class 1 Business office(裙楼商业信号丢失)、shopping_mall 12 栋里 6 栋落 Class 0 Residential(商住综合体裙楼)。当前策略 = A6 用"EULUC Class 1 + `060000` POI 命中"标 mixed_use 候选,由覆盖率四个数验证。A6 收官时销案。
+- [@owner, surfaced 2026-07-07 from A4 交叉验证] **临港 20 栋 validation 落 EULUC 未匹配**:87% 空间匹配率(136/156)里的 20 unmatched 集中临港/张江,机制 = EULUC 2022 版本时点早于新楼建成(与 §7.12 影像 ~2020 attrition 同源、不同数据源、同一时点问题)。**方法学注脚,不销**;论文如实报告"POI seeding 在临港有 EULUC 时点漂移风险"。
 
 ---
 
@@ -148,4 +152,4 @@ which it migrates to §2 Recent Decisions as a row._
 
 ## 下次 session 起点
 
-A3(高德 POI bulk fetch,key 走 session env var)**或** A4(EULUC 上海切片)—— 先后顺序由 owner 定,开工时指定。
+**A3 批量抓取脚本编写(方案 α' 定向版)**——回主仓 Codespace(EULUC + pilot 脚本都在 `~/euluc/`),用 `data/raw/euluc/euluc_shanghai_2022.gpkg` 的 Class 0/1/2 面积并集生成扫描 mask,抓 `060000|100000` 两类 typecode,网格 1km × 1km 内置自适应细分 + WGS84↔GCJ-02 转换 + 断点续传,预算 ~5,800 请求。开工前先决定是否做高德个人实名认证提额(免费 5,000/月 略超预算)。悬案:ep 语义(供应商)、415/6,027 身份、7-12 层段异常(A5 销)、多 typecode 计票(A6)、超高层名单细则(Module C 前)、**mixed_use 综合体识别 by Class 1 + 060000 命中**(A6 销)、**临港 EULUC 2022 版本时点外**(方法学注脚,不销)。
