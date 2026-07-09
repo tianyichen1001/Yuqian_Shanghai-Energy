@@ -96,6 +96,8 @@ ipython_config.py
 # be reproducible and reviewable in the PR).
 !/data/raw/validation/
 !/data/raw/validation/**
+!/data/raw/poi/
+!/data/raw/poi/**
 # But do not track the *internal* candidates table (carries `height` and
 # breaks the §5 blind-test rule if leaked) or the checkpoint-1 preview PNGs
 # (large, run-time regenerable).
