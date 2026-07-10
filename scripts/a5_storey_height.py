@@ -29,9 +29,10 @@
        (a) 最大交叠 IoU:每栋 2023 取交叠面积最大的 2026,算 IoU,
            保留 IoU≥0.3 的"干净配对";
        (b) 质心落入:2023 代表点落入的 2026 面。
-    4. 分箱层高表:按 floors_2023 分箱 1-3 / 4-6 / 7-9 / 10-18 / 19-30,
-       每箱 median+P25+P75+n(height/floors_2023);超高层(≥40 层)不进表,
-       走 data/reference/supertall_height_floor_crosswalk.csv。
+    4. 分箱层高表:按 floors_2023 分箱 1-3 / 4-6 / 7-9 / 10-18 / 19-30 / 31-39
+       (31-39 箱 owner 复核 PR #10 后加,2026-07-10),每箱 median+P25+P75+n
+       (height/floors_2023);超高层(≥40 层,即 height≥160 m)不进表,走
+       data/reference/supertall_height_floor_crosswalk.csv。
     5. 7-12 异常复查:干净配对该窗口 ratio 分布 + 两套配对对比 + validation 复算。
     6. 全局隐含层高诊断(4.0 是否成立)。
     7. validation 反推误差(可用样本 height→floors)。
@@ -84,12 +85,14 @@ SUPERTALL_MIN_FLOORS = 40    # ≥40 层不进箱表,走 crosswalk
 ANOMALY_WINDOW = (7, 12)     # §6 悬案窗口(observed / floors_2023 层)
 NN_TOLERANCE_M = 10          # validation 点入面未命中时最近邻容差
 # 分箱:(floors_min, floors_max, label)
+# 31-39 箱系 owner 复核 PR #10 后加(2026-07-10);≥40 层仍排除,走 crosswalk。
 BANDS: list[tuple[int, int, str]] = [
     (1, 3, "1-3"),
     (4, 6, "4-6"),
     (7, 9, "7-9"),
     (10, 18, "10-18"),
     (19, 30, "19-30"),
+    (31, 39, "31-39"),
 ]
 
 _T0 = time.time()
@@ -215,8 +218,10 @@ def write_band_table(band: pd.DataFrame, out: Path, clean_n: int) -> None:
         f"# 生成:scripts/a5_storey_height.py;干净配对 n={clean_n:,};METRIC_EPSG={METRIC_EPSG}",
         "# storey_height = height / floors_2023,floors_2023 = FLOOR // 2(FLOOR=2×实际层数)",
         "# ⚠️ 重大发现:frac_height_eq_2x_floor 显示 2026 height 高度合成(≈2×FLOOR=4m×层),",
-        "#    经验层高退化为恒等 4.0 m,非上海真实层高;详见 PR 描述与脚本 docstring。",
-        f"# 超高层(≥{SUPERTALL_MIN_FLOORS} 层)不进本表,走 {CROSSWALK_REF}",
+        "#    经验层高退化为恒等 4.0 m,非上海真实层高;本表是合成性证据,非经验换算表。",
+        "#    A6 换算规则与 supertall 阈值见 data/reference/README.md。",
+        f"# 表覆盖 floors_2023 1-39;超高层(≥{SUPERTALL_MIN_FLOORS} 层,即 height≥160 m)"
+        f"不进本表,走 {CROSSWALK_REF}",
     ]
     with out.open("w", encoding="utf-8") as f:
         f.write("\n".join(header) + "\n")
@@ -382,13 +387,12 @@ def main() -> int:
     _rule("分箱经验层高表(storey_height = height / floors_2023)")
     with pd.option_context("display.width", 160, "display.max_columns", None):
         print(band.to_string(index=False))
-    # 超高层与 31-39 gap 报账(不进表)
-    n_gap = int(((clean.floors_2023 >= 31) & (clean.floors_2023 <= 39)).sum())
+    # 超高层报账(不进表);31-39 已于 2026-07-10 owner 复核后入表
     n_super = int((clean.floors_2023 >= SUPERTALL_MIN_FLOORS).sum())
-    print(f"\n[不进表] 干净配对内 31-39 层(箱表与超高层之间的 gap): {n_gap} 栋;"
-          f"≥{SUPERTALL_MIN_FLOORS} 层(超高层,走 crosswalk): {n_super} 栋")
+    print(f"\n[不进表] 干净配对内 ≥{SUPERTALL_MIN_FLOORS} 层(超高层,即 height≥160 m,走 crosswalk): "
+          f"{n_super} 栋")
     print(f"[提醒] 2023 原始 ≥{SUPERTALL_MIN_FLOORS} 层共 111 栋(非 9;'9 个锚点'仅指 FLOOR>130 段);"
-          f"31-39 层 216 栋无 band 归属 —— 是否补箱/扩顶箱属设计决策,留 owner 复核。")
+          "31-39 箱已入表(owner 复核 PR #10 后加,2026-07-10)。")
 
     global_storey = float(
         (clean.loc[(clean.floors_2023 > 0) & (clean.floors_2023 < SUPERTALL_MIN_FLOORS), "height"]

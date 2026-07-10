@@ -2,11 +2,13 @@
 # 生成:scripts/a5_storey_height.py;干净配对 n=354,241;METRIC_EPSG=32651
 # storey_height = height / floors_2023,floors_2023 = FLOOR // 2(FLOOR=2×实际层数)
 # ⚠️ 重大发现:frac_height_eq_2x_floor 显示 2026 height 高度合成(≈2×FLOOR=4m×层),
-#    经验层高退化为恒等 4.0 m,非上海真实层高;详见 PR 描述与脚本 docstring。
-# 超高层(≥40 层)不进本表,走 data/reference/supertall_height_floor_crosswalk.csv
+#    经验层高退化为恒等 4.0 m,非上海真实层高;本表是合成性证据,非经验换算表。
+#    A6 换算规则与 supertall 阈值见 data/reference/README.md。
+# 表覆盖 floors_2023 1-39;超高层(≥40 层,即 height≥160 m)不进本表,走 data/reference/supertall_height_floor_crosswalk.csv
 band,floors_min,floors_max,n_clean_pairs,storey_height_median_m,storey_height_p25_m,storey_height_p75_m,frac_height_eq_2x_floor
 1-3,1,3,163878,4.0,4.0,4.0,0.8495
 4-6,4,6,111468,4.0,4.0,4.0,0.8485
 7-9,7,9,49935,4.0,4.0,4.0,0.7887
 10-18,10,18,21874,4.0,4.0,4.0,0.6808
 19-30,19,30,6791,4.0,3.653,4.0,0.5758
+31-39,31,39,193,4.0,3.03,4.0,0.4715
