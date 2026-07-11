@@ -38,8 +38,10 @@ supertall:
 # 多 typecode 感知:code_prefix 对 '|' 分隔的任一子码匹配即算命中。
 poi_signals:
   mall:                         # mall_signal = 任一条命中
-    - {code_prefix: "0601", max_dist_m: 150}   # 060100 商场级
-    - {code_prefix: "06",   max_dist_m: 100}   # 060000 购物 catch-all(retail 兜底)
+    - {code_prefix: "0601", max_dist_m: 150}   # 060100 商场级(A6.2 起唯一 mall 信号)
+    # A6.2 删除原 {code_prefix: "06", max_dist_m: 100} 分支:仅 19 个 validation
+    # 格有 060000 全量数据,空间不均匀且 16 flip/5 hit 净负;A3b 全市 060000
+    # 落地后重估(owner 2026-07-11 下发)。
   hotel:                        # hotel_signal(A6.1 修订 2026-07-11,owner 复核 PR #11)
     - {code_prefix: "1001", max_dist_m: 150}   # 宾馆酒店
     - {code_prefix: "1002", max_dist_m: 150,   # 招待所/公寓式酒店:仅当建筑落

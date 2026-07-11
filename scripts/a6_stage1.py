@@ -8,7 +8,8 @@
        无配对者 floors=NA + flag=crosswalk_or_cnbh(不硬算)。
     3. EULUC 先验:建筑质心落入 parcel 取 Class;落不进标 euluc_out(EULUC-scoped 依据)。
     4. POI 播种:A3a POI(clean + valwin,用 WGS84 列)按距离挂最近建筑 ——
-       mall 信号 (0601<=150 m) OR (06<=100 m);hotel 信号 (1001<=150 m) OR
+       mall 信号 0601<=150 m【A6.2:删 06<=100 m 兜底分支,A3b 后重估】;
+       hotel 信号 (1001<=150 m) OR
        (1002<=150 m 且建筑 euluc_class∈{1,2})【A6.1 修订,堵住宅楼过度挂靠】。
        多 typecode 方案 C(1/N 分票);诊断输出多码占比+码数分布 + 方案 A vs C 在
        validation 上的命中差异(计票悬案实证材料)。
