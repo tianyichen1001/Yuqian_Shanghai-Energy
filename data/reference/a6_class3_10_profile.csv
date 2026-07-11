@@ -1,0 +1,3 @@
+euluc_class,name,n,pct_floors_le3,floors_p10,floors_p25,floors_p50,floors_p75,floors_p90,area_p10_m2,area_p25_m2,area_p50_m2,area_p75_m2,area_p90_m2
+3,industrial,126324,86.6,2.0,2.0,2.0,2.0,4.0,135.5,221.7,504.6,1406.5,3284.7
+10,park_greenspace,173898,85.3,2.0,2.0,2.0,2.0,5.0,119.2,180.7,300.1,576.7,1083.8
