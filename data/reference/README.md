@@ -14,8 +14,9 @@ A–E 各步可引用的稳定查表。
 | `euluc_class_mapping.csv` | A4(commit `c3609f6`) | EULUC-China 2.0 的 11 类 `Class(int8)` → 中英功能名对照。 |
 | `a3_scan_grid.gpkg` | A3(commit `e759e56` / `6a21003`) | 高德 POI 定向抓取的扫描网格几何。 |
 | `a3_cell_meta.csv` | A3(同上) | 扫描网格每格元数据(`cell_id, area_ha, dense`)。 |
-| `a6_coverage_stats.csv` | A6 Stage 1(`scripts/a6_stage1.py`) | master 覆盖率四个数 ×(全市 / EULUC-scoped)双口径(见下节)。 |
+| `a6_coverage_stats.csv` | A6 Stage 1(`scripts/a6_stage1.py`) | master 覆盖率四个数 ×(全市 / EULUC-scoped)双口径 ×(栋数 / GFA)双权重(见下节)。 |
 | `a6_validation_diagnostics.csv` | A6 Stage 1(同上) | validation 分 archetype 规则 accuracy + 10 层翻转率 + 计票 A/C(见下节)。 |
+| `a6_class3_10_profile.csv` | A6.1(同上,诊断 d) | Class 3 工业 / Class 10 公园内建筑画像:层数×面积分位数(村居假说验证)。 |
 
 ---
 
@@ -100,32 +101,56 @@ else:
 | MD5 | 见私仓 `md5_checksums.txt` |
 
 **schema**:`height, area_m2, is_supertall, floors, floors_source, euluc_class,
-euluc_out, mall_signal, hotel_signal, mixed_use_candidate, archetype, label_rule, geometry`。
+euluc_out, mall_signal, hotel_signal, mixed_use_candidate, archetype, label_rule,
+bundled_label, geometry`(`bundled_label` A6.1 新增:sport_culture 等捆绑标签 flag)。
 
-### 覆盖率四个数(`a6_coverage_stats.csv`)
+### 覆盖率四个数(`a6_coverage_stats.csv`,A6.1 修订)
 
-| 口径 | n | rule-labeled | ML(占位) | unknown | height-complete |
+栋数 / GFA(=footprint 面积 × floors)双权重 × 双口径:
+
+| 口径 | 权重 | rule-labeled | ML(占位) | unknown | height-complete |
 |---|---|---|---|---|---|
-| 全市 | 843,062 | 58.07% | 0% | 41.93% | 99.997%(28 栋超高层未配 = NA+flag) |
-| EULUC-scoped | 787,696 | 62.11% | 0% | 37.89% | 99.997% |
+| 全市(843,062) | 栋数 | **56.98%** | 0% | 43.02% | 99.997%(28 NA+flag) |
+| 全市 | GFA(2.73 Gm²) | **63.78%** | 0% | 36.22% | 99.99%(面积加权*) |
+| EULUC-scoped(787,696) | 栋数 | **60.96%** | 0% | 39.04% | 99.997% |
+| EULUC-scoped | GFA(2.63 Gm²) | **66.23%** | 0% | 33.77% | 99.99%(面积加权*) |
 
-- **unknown 结构**:全市 353,526 unknown 中,EULUC 公园(Class 10)172,759 +
-  工业(Class 3)125,718 + euluc_out 55,049。即 ~35% 全市建筑落**14 类
-  UBEM 口径外的用地**(公园绿地 / 工业),非打标失败;送 Module B / 待 owner
-  定夺是否给工业/绿地内村居建独立处置。
+\* floors=NA 无 GFA,GFA 口径的 height-complete 改按 footprint 面积加权(否则恒 100% 无意义)。
 
-### 规则打标 accuracy(`a6_validation_diagnostics.csv`)
+- **unknown 结构(A6.1)**:全市 362,655 unknown = 公园(Class 10)173,213 +
+  工业(Class 3)126,045 + euluc_out 55,156 + Class 2 商业残余 8,241。
+  前三项结构性落 14 类 UBEM 口径外/盲区,非打标失败;
+  **GFA 口径下 unknown 占比降至 36.2%**(unknown 建筑偏小偏矮,见诊断 d)。
 
-- 整体粗类 accuracy **42.3%**(n=156);参照 **EULUC-direct-only 55.1%**(n=136 在 parcel 内)。
-  差值系 POI mall/hotel 覆盖(优先级 ③④>⑤)—— 尤其 hotel `100200`(公寓式酒店)
-  在住宅楼过度挂靠;是否降级/剔除待 owner 裁。
-- 10 层线 ±2 扰动 residential mid/high 翻转率 **6.2%**(n=48)。
-- 计票 A vs C:多码占比 8.21%;全市 argmax 翻转仅 20 栋(0.16%),validation 上 0 翻转
-  → **计票方案对结论不敏感**,采信守恒的方案 C。
+### 规则打标 accuracy(`a6_validation_diagnostics.csv`,A6.1 修订)
 
-### 规则表(`config/a6_rules.yaml`)
+- 全分母 accuracy **42.3%**(n=156,含捆绑命中口径);**同基准对照**(in-parcel
+  n=136 同分母):EULUC-direct-only **54.4%** vs 全规则 **48.5%** → POI 覆盖净效应
+  **−5.9pp**(A6.1 hotel 门槛修订前为 −12.8pp,已减半)。
+- 全分母与 in-parcel 差值主因:**20 栋 euluc_out**(临港/张江 EULUC 2022 时间盲区,
+  规则层面全 miss,§14.H 同源)。
+- 残余 POI 拖累主体是 **mall 规则**(validation 内 16 flip / 5 hit,12 residential
+  被 06≤100m 街铺信号翻标)—— mall 规则本轮按 owner 指令**不动**,留案。
+- culture 0/3 说明:3 栋 culture validation 落 Class 0/1/10 parcel,**无一落 Class 9**,
+  sport_culture 捆绑无从命中 —— 系 validation 抽样地理,非机制失效
+  (sport_culture 全市打标 6,103 栋)。
+- 10 层线 ±2 扰动翻转率 **6.1%**(n=49)。
+- 计票 A vs C:多码 8.21%;全市 argmax 翻转 20 栋(0.16%),validation 0 翻转
+  → **不敏感,采守恒方案 C**。
+
+### 诊断 d — Class 3/10 建筑画像(`a6_class3_10_profile.csv`,A6.1 新增)
+
+| Class | n | floors 中位(P10–P90) | ≤3 层 | area 中位(P10–P90)m² |
+|---|---|---|---|---|
+| 3 工业 | 126,324 | 2(2–4) | 86.6% | 504.6(135.5–3,284.7) |
+| 10 公园 | 173,898 | 2(2–5) | 85.3% | 300.1(119.2–1,083.8) |
+
+低层小 footprint 主导 → **村居/附属小建筑画像成立**(工业尾部 P90 3,285 m² 为厂房/仓储);定性裁决留 owner。
+
+### 规则表(`config/a6_rules.yaml`,A6.1 修订)
 
 优先级 ① supertall(横切 flag)② mixed_use 候选 ③ mall ④ hotel ⑤ EULUC 直接命中类
-⑥ unknown。EULUC Class→archetype 的 `bundled_default`(Class 2 商业 / 9 体育文化 →
-other_public)与 `out_of_taxonomy`(Class 3 工业 / 10 公园 → unknown)两档系执行端
-保守默认,**待 owner 复核批准**。
+⑥ unknown。A6.1(owner 复核 PR #11 后):hotel `100200` 仅在建筑落 EULUC Class 1/2
+parcel 时计信号;Class 9 → `sport_culture` 捆绑标签(计入 rule-labeled,
+`bundled_label` flag,Module C 前拆分);Class 2 → unknown 降级(euluc_class 字段保留);
+Class 3/10 维持 out_of_taxonomy → unknown。

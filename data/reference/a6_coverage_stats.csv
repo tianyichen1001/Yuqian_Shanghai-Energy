@@ -1,3 +1,5 @@
-scope,n,pct_rule_labeled,pct_ml_predicted,pct_unknown,pct_height_complete,n_floors_na
-citywide,843062,58.07,0.0,41.93,99.9967,28
-euluc_scoped,787696,62.11,0.0,37.89,99.9966,27
+scope,weight,n,weight_total,pct_rule_labeled,pct_ml_predicted,pct_unknown,pct_height_complete,n_floors_na,note
+citywide,count,843062,843062.0,56.98,0.0,43.02,99.9967,28,
+citywide,gfa,843062,2730066778.0,63.78,0.0,36.22,99.9896,28,height_complete=面积加权(floors NA 无 GFA)
+euluc_scoped,count,787696,787696.0,60.96,0.0,39.04,99.9966,27,
+euluc_scoped,gfa,787696,2626472633.0,66.23,0.0,33.77,99.9897,27,height_complete=面积加权(floors NA 无 GFA)

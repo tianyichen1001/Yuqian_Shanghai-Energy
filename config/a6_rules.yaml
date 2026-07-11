@@ -17,8 +17,9 @@ meta:
   created: "2026-07-11"
   notes: |
     优先级规则表 ①-⑥ 由 owner 在 claude.ai 设计(本文件仅落地)。
-    euluc_class_to_archetype 的 bundled_default / out_of_taxonomy 两档
-    系执行端保守默认 + 显式 flag,待 owner 复核批准(见 PR 描述)。
+    A6.1 补丁(2026-07-11,owner 复核 PR #11 后下发):hotel 100200 加
+    euluc_class∈{1,2} 门槛;Class 9 → sport_culture 捆绑标签(bundled flag);
+    Class 2 → unknown 降级。out_of_taxonomy(Class 3/10)维持 unknown。
 
 # ---- 层高推断(A5 结论,见 data/reference/README.md)-------------------------
 storey_inference:
@@ -39,9 +40,11 @@ poi_signals:
   mall:                         # mall_signal = 任一条命中
     - {code_prefix: "0601", max_dist_m: 150}   # 060100 商场级
     - {code_prefix: "06",   max_dist_m: 100}   # 060000 购物 catch-all(retail 兜底)
-  hotel:                        # hotel_signal
+  hotel:                        # hotel_signal(A6.1 修订 2026-07-11,owner 复核 PR #11)
     - {code_prefix: "1001", max_dist_m: 150}   # 宾馆酒店
-    - {code_prefix: "1002", max_dist_m: 150}   # 招待所/公寓式酒店
+    - {code_prefix: "1002", max_dist_m: 150,   # 招待所/公寓式酒店:仅当建筑落
+       require_euluc_class: [1, 2]}            # EULUC Class 1/2 parcel 才计信号
+                                               # (堵住宅楼过度挂靠,acc 55.1→42.3 主因)
   vote_scheme: "C"              # 多码计票:C=1/N 均分(投票权守恒);A=每码 1 票(仅诊断对比)
 
 # ---- mixed_use 候选(规则 ②)------------------------------------------------
@@ -67,10 +70,11 @@ euluc_class_to_archetype:
   6:  {archetype: government_office,  confidence: direct}
   7:  {archetype: education,          confidence: direct}
   8:  {archetype: healthcare,         confidence: direct}
-  2:  {archetype: other_public,       confidence: bundled_default,
-       note: "商业服务打包(零售/餐饮/酒店/娱乐);mall+hotel 已在 ③④ 先由 POI 判;残余保守归 other_public,备选 shopping_mall"}
-  9:  {archetype: other_public,       confidence: bundled_default,
-       note: "体育文化打包(sports+culture 两类);备选按 POI 拆分,本阶段无对应 POI 故保守归 other_public"}
+  2:  {archetype: null,               confidence: downgraded_to_unknown,
+       note: "A6.1 修订:商业服务打包降为 unknown(mall/hotel 已在 ③④ 由 POI 截留;残余商业送 Module B;euluc_class 字段保留)"}
+  9:  {archetype: sport_culture,      confidence: bundled_label,
+       bundle_of: [sports, culture],
+       note: "A6.1 修订:打捆绑标签 sport_culture(计入 rule-labeled,带 bundled flag,不再入 other_public);Module C 前需拆分"}
   3:  {archetype: null,               confidence: out_of_taxonomy,
        note: "工业 — 不在 14 类 UBEM 口径内"}
   10: {archetype: null,               confidence: out_of_taxonomy,

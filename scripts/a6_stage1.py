@@ -8,15 +8,20 @@
        无配对者 floors=NA + flag=crosswalk_or_cnbh(不硬算)。
     3. EULUC 先验:建筑质心落入 parcel 取 Class;落不进标 euluc_out(EULUC-scoped 依据)。
     4. POI 播种:A3a POI(clean + valwin,用 WGS84 列)按距离挂最近建筑 ——
-       mall 信号 (0601<=150 m) OR (06<=100 m);hotel 信号 (1001|1002<=150 m)。
+       mall 信号 (0601<=150 m) OR (06<=100 m);hotel 信号 (1001<=150 m) OR
+       (1002<=150 m 且建筑 euluc_class∈{1,2})【A6.1 修订,堵住宅楼过度挂靠】。
        多 typecode 方案 C(1/N 分票);诊断输出多码占比+码数分布 + 方案 A vs C 在
        validation 上的命中差异(计票悬案实证材料)。
     5. mixed_use 候选:EULUC Class 1 + 060000 命中 → mixed_use_candidate。
     6. 规则表打标(优先级 config.priority,首个命中为准):
        ① supertall(横切 flag)② mixed_use 候选 ③ mall ④ hotel
-       ⑤ EULUC 直接命中类→archetype(residential 按 10 层切 mid/high)⑥ unknown。
-    7. 组装:master→GPKG;覆盖率四个数 ×(全市 / EULUC-scoped)双口径;
-       诊断 a validation 分 archetype accuracy;诊断 b 10 层线 ±2 扰动翻转率。
+       ⑤ EULUC 直接命中类→archetype(residential 按 10 层切 mid/high;
+       Class 9 → sport_culture 捆绑标签带 bundled flag;Class 2 → unknown)【A6.1】
+       ⑥ unknown。
+    7. 组装:master→GPKG;覆盖率四个数 ×(全市 / EULUC-scoped)双口径
+       ×(栋数 / GFA=area×floors)双权重【A6.1】;诊断 a validation 分 archetype
+       accuracy(捆绑命中口径);诊断 b 10 层线 ±2 扰动翻转率;
+       诊断 d Class 3/10 内建筑画像(层数×面积分位数,村居假说)【A6.1】。
 
 坐标系口径(重要)
     2026 footprints、EULUC、POI wgs 列、validation 均为**真 WGS84**(EPSG:4326):
@@ -67,6 +72,7 @@ DEF_POI_MAP = PROJECT_ROOT / "config/poi_mapping.yaml"
 OUT_MASTER = PROJECT_ROOT / "outputs/module_a_master.gpkg"
 OUT_COVERAGE = PROJECT_ROOT / "data/reference/a6_coverage_stats.csv"
 OUT_DIAG = PROJECT_ROOT / "data/reference/a6_validation_diagnostics.csv"
+OUT_PROFILE = PROJECT_ROOT / "data/reference/a6_class3_10_profile.csv"
 INTERIM = PROJECT_ROOT / "data/interim"
 
 EXPECTED_EPSG = 4326
@@ -205,7 +211,12 @@ def seed_poi(g: gpd.GeoDataFrame, poi: pd.DataFrame, cfg: dict) -> gpd.GeoDataFr
         for r in rules:
             pref = r["code_prefix"]
             sub = poi_g[poi_g["typecode"].apply(lambda t, p=pref: _any_prefix(t, p))]
-            out |= attach(sub, r["max_dist_m"])
+            hit = attach(sub, r["max_dist_m"])
+            req = r.get("require_euluc_class")   # A6.1:信号仅在指定 EULUC 类 parcel 内生效
+            if req is not None:
+                allowed = set(g.loc[g["euluc_class"].isin(req), "idx"].tolist())
+                hit &= allowed
+            out |= hit
         return out
 
     mall_idx = signal_idx(cfg["poi_signals"]["mall"])
@@ -272,28 +283,84 @@ def label_rules(g: gpd.GeoDataFrame, cfg: dict) -> None:
 
     g["archetype"] = arche
     g["label_rule"] = lrule
-    _log("规则表打标完成(②mixed_use ③mall ④hotel ⑤euluc_direct ⑥unknown)")
+    # A6.1:捆绑标签 flag(如 sport_culture;计入 rule-labeled,Module C 前需拆分)
+    bundled = {v["archetype"] for v in cls_map.values()
+               if v.get("confidence") == "bundled_label" and v.get("archetype")}
+    g["bundled_label"] = g["archetype"].isin(bundled).to_numpy()
+    _log(f"规则表打标完成(②mixed_use ③mall ④hotel ⑤euluc_direct ⑥unknown);"
+         f"bundled 标签 {int(g['bundled_label'].sum()):,} 栋")
 
 
 # --------------------------------------------------------------------------- #
 # 覆盖率四个数 × 双口径                                                          #
 # --------------------------------------------------------------------------- #
 def coverage(g: gpd.GeoDataFrame) -> pd.DataFrame:
+    """覆盖率四个数 ×(全市 / EULUC-scoped)×(栋数 / GFA)双权重。
+
+    GFA = area_m2 × floors;floors=NA(28 栋超高层未配)无 GFA → 权重 0,
+    故 GFA 口径的 height-complete 改按 footprint 面积加权(否则恒 100% 无意义),
+    note 列注明。
+    """
     rows = []
+    gfa = (g["area_m2"].to_numpy(dtype="float64")
+           * g["floors"].to_numpy(dtype="float64", na_value=np.nan))
+    area = g["area_m2"].to_numpy(dtype="float64")
+    labeled = (g["archetype"] != "unknown").to_numpy()
+    unknown = ~labeled
+    has_fl = g["floors"].notna().to_numpy()
     for scope, mask in [("citywide", np.ones(len(g), bool)),
                         ("euluc_scoped", (~g["euluc_out"]).to_numpy())]:
-        s = g[mask]
-        n = len(s)
-        labeled = (s["archetype"] != "unknown").sum()
-        n_na = int(s["floors"].isna().sum())
-        rows.append({
-            "scope": scope, "n": n,
-            "pct_rule_labeled": round(labeled / n * 100, 2),
-            "pct_ml_predicted": 0.0,   # 本阶段占位
-            "pct_unknown": round((s["archetype"] == "unknown").sum() / n * 100, 2),
-            "pct_height_complete": round(s["floors"].notna().sum() / n * 100, 4),
-            "n_floors_na": n_na,   # supertall 未配对(floors=NA + 明确 flag)
-        })
+        n = int(mask.sum())
+        n_na = int((~has_fl & mask).sum())
+        for wname in ("count", "gfa"):
+            if wname == "count":
+                w = mask.astype(float)
+                hc = (has_fl & mask).sum() / n * 100
+                note = ""
+            else:
+                w = np.where(mask, np.nan_to_num(gfa, nan=0.0), 0.0)
+                aw = np.where(mask, area, 0.0)
+                hc = aw[has_fl & mask].sum() / aw.sum() * 100   # 面积加权,见 docstring
+                note = "height_complete=面积加权(floors NA 无 GFA)"
+            tot = w.sum()
+            rows.append({
+                "scope": scope, "weight": wname, "n": n,
+                "weight_total": round(tot, 0),
+                "pct_rule_labeled": round(w[labeled].sum() / tot * 100, 2),
+                "pct_ml_predicted": 0.0,   # 本阶段占位
+                "pct_unknown": round(w[unknown].sum() / tot * 100, 2),
+                "pct_height_complete": round(hc, 4),
+                "n_floors_na": n_na,   # supertall 未配对(floors=NA + 明确 flag)
+                "note": note,
+            })
+    return pd.DataFrame(rows)
+
+
+# --------------------------------------------------------------------------- #
+# 诊断 d:Class 3(工业)/ Class 10(公园)内建筑画像(A6.1 新增)                 #
+# --------------------------------------------------------------------------- #
+def profile_class3_10(g: gpd.GeoDataFrame) -> pd.DataFrame:
+    """层数分布 × footprint 面积分布(分位数),验证村居假说。"""
+    _rule("诊断 d — Class 3(工业)/ Class 10(公园)内建筑画像(村居假说)")
+    qs = [0.10, 0.25, 0.50, 0.75, 0.90]
+    rows = []
+    for cls, name in [(3, "industrial"), (10, "park_greenspace")]:
+        s = g[g["euluc_class"] == cls]
+        fl = s["floors"].dropna().to_numpy(dtype="float64")
+        ar = s["area_m2"].to_numpy(dtype="float64")
+        row = {"euluc_class": cls, "name": name, "n": len(s),
+               "pct_floors_le3": round(float((fl <= 3).mean()) * 100, 1)}
+        for q, v in zip(qs, np.quantile(fl, qs), strict=True):
+            row[f"floors_p{int(q*100)}"] = round(float(v), 1)
+        for q, v in zip(qs, np.quantile(ar, qs), strict=True):
+            row[f"area_p{int(q*100)}_m2"] = round(float(v), 1)
+        rows.append(row)
+        print(f"Class {cls} ({name}): n={len(s):,} | floors P10-P90 "
+              f"{row['floors_p10']:g}-{row['floors_p90']:g}(中位 {row['floors_p50']:g},"
+              f"≤3 层 {row['pct_floors_le3']}%)| area P10-P90 "
+              f"{row['area_p10_m2']:g}-{row['area_p90_m2']:g} m²(中位 {row['area_p50_m2']:g})")
+    print("判读:低层(≤3)占比高 + 小 footprint → 村居/附属小建筑画像;"
+          "大 footprint + 低层 → 厂房/仓储画像。数字如上,定性留 owner。")
     return pd.DataFrame(rows)
 
 
@@ -402,26 +469,45 @@ def diagnostics(g: gpd.GeoDataFrame, poi_g: gpd.GeoDataFrame, poi: pd.DataFrame,
 
     _rule("诊断 a — validation 规则打标 accuracy(分 archetype,真值 vs 预测粗类对齐)")
     print(f"annotated={len(val)} | 命中 master 建筑={len(matched)}")
+    # A6.1:捆绑标签命中口径 —— pred=sport_culture 对 truth∈bundle_of(sports/culture)算命中
+    bundle_map = {v["archetype"]: set(v.get("bundle_of") or [])
+                  for v in cfg["euluc_class_to_archetype"].values()
+                  if v.get("confidence") == "bundled_label" and v.get("archetype")}
+
+    def is_hit(pred, truth):
+        return pred == truth or truth in bundle_map.get(pred, ())
+
+    hits = np.array([is_hit(p, t) for p, t in
+                     zip(matched["pred_coarse"], matched["truth_arch"], strict=True)])
     rows = []
     for tv in sorted(matched["truth_arch"].dropna().unique()):
-        sub = matched[matched["truth_arch"] == tv]
-        hit = int((sub["pred_coarse"] == tv).sum())
-        rows.append({"archetype_truth": tv, "n": len(sub), "rule_hit": hit,
-                     "accuracy_pct": round(hit / len(sub) * 100, 1)})
+        m = (matched["truth_arch"] == tv).to_numpy()
+        hit = int(hits[m].sum())
+        rows.append({"archetype_truth": tv, "n": int(m.sum()), "rule_hit": hit,
+                     "accuracy_pct": round(hit / m.sum() * 100, 1)})
     acc_df = pd.DataFrame(rows).sort_values("n", ascending=False)
-    overall = (matched["pred_coarse"] == matched["truth_arch"]).mean() * 100
+    overall = hits.mean() * 100
     print(acc_df.to_string(index=False))
-    print(f"整体 accuracy(粗类对齐): {overall:.1f}%  (n={len(matched)})")
+    print(f"整体 accuracy(粗类对齐,含捆绑命中): {overall:.1f}%  (n={len(matched)})")
 
     # 参照:EULUC-direct-only(忽略 POI mall/hotel/mixed 覆盖)以量化 POI 覆盖的代价
-    cls_map = {int(k): (v.get("archetype") if v.get("archetype") != "residential" else "residential")
+    cls_map = {int(k): v.get("archetype")
                for k, v in cfg["euluc_class_to_archetype"].items()}
     inpar = matched[matched["euluc_class"].notna()].copy()
-    eu_pred = inpar["euluc_class"].astype(int).map(cls_map)
-    eu_acc = (eu_pred.map(coarse) == inpar["truth_arch"]).mean() * 100
-    print(f"参照 EULUC-direct-only accuracy(仅在 parcel 内 n={len(inpar)}): {eu_acc:.1f}%")
-    print(f"  → POI mall/hotel 覆盖(优先级 ③④>⑤)使命中 {eu_acc:.1f}%→{overall:.1f}%;"
-          "主因 hotel 100200(公寓式酒店)在住宅楼过度挂靠,详见 PR 判决书")
+    eu_pred = inpar["euluc_class"].astype(int).map(cls_map).map(coarse)
+    eu_hits = [is_hit(p, t) for p, t in
+               zip(eu_pred, inpar["truth_arch"], strict=True)]
+    eu_acc = float(np.mean(eu_hits)) * 100
+    # 同基准对照(A6.1):全规则 accuracy 限 in-parcel 同一分母,才与 EULUC-only 可比;
+    # 全 156 分母含 20 栋 euluc_out(临港/张江 EULUC 时间盲区),规则层面结构性不可标。
+    inpar_mask = matched["euluc_class"].notna().to_numpy()
+    full_inpar = float(hits[inpar_mask].mean()) * 100
+    print(f"参照 EULUC-direct-only accuracy(in-parcel n={len(inpar)},同捆绑口径): {eu_acc:.1f}%")
+    print(f"同基准全规则 accuracy(in-parcel 同分母): {full_inpar:.1f}% "
+          f"→ POI 覆盖净效应 {full_inpar-eu_acc:+.1f}pp(A6.1 hotel 门槛修订后)")
+    n_out = int((~inpar_mask).sum())
+    print(f"全分母 {overall:.1f}% 与 in-parcel 差值主因:{n_out} 栋 euluc_out"
+          f"(EULUC 2022 时间盲区,规则层面全 miss)")
 
     # ---- 诊断 b:10 层线 ±2 扰动翻转率 ----
     _rule("诊断 b — 10 层线 ±2 扰动 residential mid/high 翻转率")
@@ -476,6 +562,8 @@ def diagnostics(g: gpd.GeoDataFrame, poi_g: gpd.GeoDataFrame, poi: pd.DataFrame,
                        "n": len(matched)},
                       {"metric": "euluc_direct_only_accuracy", "accuracy_pct": round(eu_acc, 1),
                        "n": len(inpar)},
+                      {"metric": "full_rule_accuracy_in_parcel", "accuracy_pct": round(full_inpar, 1),
+                       "n": len(inpar)},
                       {"metric": "residential_10floor_flip_rate", "accuracy_pct": round(fr, 1),
                        "n": len(resi)},
                       {"metric": "poi_multicode_pct",
@@ -522,7 +610,8 @@ def main() -> int:
     print("\nlabel_rule:")
     print(g["label_rule"].value_counts().to_string())
 
-    diag = diagnostics(g, poi_g, poi, args.val, cfg, args.poi_map)  # 7 诊断
+    diag = diagnostics(g, poi_g, poi, args.val, cfg, args.poi_map)  # 7 诊断 a/b/c
+    prof = profile_class3_10(g)                                     # 诊断 d(A6.1)
 
     if not args.no_write:
         OUT_MASTER.parent.mkdir(parents=True, exist_ok=True)
@@ -531,9 +620,11 @@ def main() -> int:
         out.to_file(OUT_MASTER, driver="GPKG", layer="module_a_master")
         cov.to_csv(OUT_COVERAGE, index=False)
         diag.to_csv(OUT_DIAG, index=False)
+        prof.to_csv(OUT_PROFILE, index=False)
         _log(f"写出 master: {OUT_MASTER.relative_to(PROJECT_ROOT)} "
              f"({OUT_MASTER.stat().st_size/1e6:.1f} MB)")
-        _log(f"写出 {OUT_COVERAGE.relative_to(PROJECT_ROOT)} + {OUT_DIAG.relative_to(PROJECT_ROOT)}")
+        _log(f"写出 {OUT_COVERAGE.relative_to(PROJECT_ROOT)} + {OUT_DIAG.relative_to(PROJECT_ROOT)}"
+             f" + {OUT_PROFILE.relative_to(PROJECT_ROOT)}")
     else:
         _log("--no-write:未落盘")
 
