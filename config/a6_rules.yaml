@@ -1,0 +1,87 @@
+# =============================================================================
+# config/a6_rules.yaml
+# A6 Stage 1 — 规则打标(rule-based archetype seeding)优先级规则表 + 参数
+# =============================================================================
+#
+# 用途:scripts/a6_stage1.py 读取本文件,对 2026 全市 843,062 栋建筑做规则播种。
+# 上游先验:config/poi_mapping.yaml(POI→archetype 词典)、
+#           data/reference/euluc_class_mapping.csv(EULUC Class→功能)、
+#           config/archetypes.yaml(14 archetype + 住宅 10 层分界)。
+# 本阶段 ML=0(占位);规则未命中者标 unknown 送 Module B。
+#
+# 设计口径:所有可调参数集中在此(CLAUDE.md §4 约束 6);源码不写魔数。
+# =============================================================================
+
+meta:
+  stage: "A6 Stage 1"
+  created: "2026-07-11"
+  notes: |
+    优先级规则表 ①-⑥ 由 owner 在 claude.ai 设计(本文件仅落地)。
+    euluc_class_to_archetype 的 bundled_default / out_of_taxonomy 两档
+    系执行端保守默认 + 显式 flag,待 owner 复核批准(见 PR 描述)。
+
+# ---- 层高推断(A5 结论,见 data/reference/README.md)-------------------------
+storey_inference:
+  meters_per_floor: 4.0        # floors = round(height / 4)
+
+# ---- 超高层特例(规则 ①)----------------------------------------------------
+supertall:
+  height_threshold_m: 160      # height >= 160 → supertall flag;不走 /4
+  # 处置:与 2023 集最大交叠 IoU>=iou_min 取 FLOOR//2 作层数;
+  #       无配对者 floors=NA + flag=crosswalk_or_cnbh(不硬算)
+  iou_min: 0.30
+  metric_epsg: 32651
+
+# ---- POI 信号(规则 ③ mall / ④ hotel;规则 ② 复用 mall 信号)----------------
+# "按距离挂建筑":每个 POI 挂到阈值内最近的一栋建筑(非邻域全标)。
+# 多 typecode 感知:code_prefix 对 '|' 分隔的任一子码匹配即算命中。
+poi_signals:
+  mall:                         # mall_signal = 任一条命中
+    - {code_prefix: "0601", max_dist_m: 150}   # 060100 商场级
+    - {code_prefix: "06",   max_dist_m: 100}   # 060000 购物 catch-all(retail 兜底)
+  hotel:                        # hotel_signal
+    - {code_prefix: "1001", max_dist_m: 150}   # 宾馆酒店
+    - {code_prefix: "1002", max_dist_m: 150}   # 招待所/公寓式酒店
+  vote_scheme: "C"              # 多码计票:C=1/N 均分(投票权守恒);A=每码 1 票(仅诊断对比)
+
+# ---- mixed_use 候选(规则 ②)------------------------------------------------
+# EULUC Class 1(商务办公)+ 060000 命中 → mixed_use_candidate(§6 A6 销案口径)
+mixed_use_candidate:
+  euluc_class: 1
+  requires_signal: "mall"      # "060000 命中" 复用 mall_signal(0601≤150 或 06≤100)
+
+# ---- 住宅 mid/high 分界(镜像 config/archetypes.yaml globals)----------------
+residential_split:
+  floor_count_cutoff: 10       # floors >= 10 → residential_high_rise;否则 residential_mid_rise
+
+# ---- EULUC 直接命中类 → archetype(规则 ⑤)----------------------------------
+# confidence:
+#   direct           = 1:1 高置信直接映射
+#   bundled_default  = EULUC 类目打包多功能,执行端保守默认,待 owner 批准
+#   out_of_taxonomy  = 不在 Wang et al. 公建+住宅 14 类内 → 不给 archetype(unknown)
+euluc_class_to_archetype:
+  0:  {archetype: residential,       confidence: direct, split_by_floors: true}
+  1:  {archetype: office,            confidence: direct}
+  4:  {archetype: transportation,    confidence: direct}
+  5:  {archetype: transportation,    confidence: direct}
+  6:  {archetype: government_office,  confidence: direct}
+  7:  {archetype: education,          confidence: direct}
+  8:  {archetype: healthcare,         confidence: direct}
+  2:  {archetype: other_public,       confidence: bundled_default,
+       note: "商业服务打包(零售/餐饮/酒店/娱乐);mall+hotel 已在 ③④ 先由 POI 判;残余保守归 other_public,备选 shopping_mall"}
+  9:  {archetype: other_public,       confidence: bundled_default,
+       note: "体育文化打包(sports+culture 两类);备选按 POI 拆分,本阶段无对应 POI 故保守归 other_public"}
+  3:  {archetype: null,               confidence: out_of_taxonomy,
+       note: "工业 — 不在 14 类 UBEM 口径内"}
+  10: {archetype: null,               confidence: out_of_taxonomy,
+       note: "公园绿地 — 非建筑用地"}
+
+# ---- 优先级规则表(top-down,首个命中为准;写进 config 以复现)---------------
+# ① supertall 为横切 flag(定 floors 处置);archetype 仍由 ②-⑥ 决定。
+priority:
+  - {rank: 1, rule: supertall,           kind: flag,      note: "height>=160;floors 走 crosswalk;archetype 仍走 ②-⑥"}
+  - {rank: 2, rule: mixed_use_candidate,  archetype: mixed_use}
+  - {rank: 3, rule: mall,                 archetype: shopping_mall}
+  - {rank: 4, rule: hotel,                archetype: hotel}
+  - {rank: 5, rule: euluc_direct,         note: "euluc_class_to_archetype;residential 按 10 层切 mid/high"}
+  - {rank: 6, rule: unknown,              archetype: unknown, note: "无任何命中 → 送 Module B"}

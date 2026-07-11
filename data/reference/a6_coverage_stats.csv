@@ -1,0 +1,3 @@
+scope,n,pct_rule_labeled,pct_ml_predicted,pct_unknown,pct_height_complete,n_floors_na
+citywide,843062,58.07,0.0,41.93,99.9967,28
+euluc_scoped,787696,62.11,0.0,37.89,99.9966,27

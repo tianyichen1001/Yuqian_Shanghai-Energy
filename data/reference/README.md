@@ -14,6 +14,8 @@ A–E 各步可引用的稳定查表。
 | `euluc_class_mapping.csv` | A4(commit `c3609f6`) | EULUC-China 2.0 的 11 类 `Class(int8)` → 中英功能名对照。 |
 | `a3_scan_grid.gpkg` | A3(commit `e759e56` / `6a21003`) | 高德 POI 定向抓取的扫描网格几何。 |
 | `a3_cell_meta.csv` | A3(同上) | 扫描网格每格元数据(`cell_id, area_ha, dense`)。 |
+| `a6_coverage_stats.csv` | A6 Stage 1(`scripts/a6_stage1.py`) | master 覆盖率四个数 ×(全市 / EULUC-scoped)双口径(见下节)。 |
+| `a6_validation_diagnostics.csv` | A6 Stage 1(同上) | validation 分 archetype 规则 accuracy + 10 层翻转率 + 计票 A/C(见下节)。 |
 
 ---
 
@@ -80,3 +82,50 @@ else:
 - 因 `height` 合成于 4 m/层,`round(height/4)` 实质是**读回 2026 数据集自带的楼层数**,
   而非独立高度反推。A5 validation(149 可用样本)反推 floors 的误差(MAE 3.04 层、±1 50.3%)
   主体来自 2026 自带层数与人工观测之差,非层高模型误差。
+
+---
+
+## A6 Stage 1 — master 表 + 覆盖率(规则打标)
+
+### master 产品位置(体积失控,走私仓)
+
+84 万栋 master 含几何,GeoJSON 体积失控 → 落 **GPKG**;>100 MB 走私仓 zip 通道:
+
+| 项 | 值 |
+|---|---|
+| 文件 | `module_a_master.gpkg`(843,062 栋,EPSG:4326) |
+| 私仓 | `Yuqian_Shanghai-Energy-data` git 树 `module_a_master.gpkg.zip`(~94 MB) |
+| 未压 | ~239 MB;主仓 gitignored(`outputs/module_a_master.gpkg`) |
+| 复现 | `python scripts/a6_stage1.py`(输入见脚本 docstring;规则见 `config/a6_rules.yaml`) |
+| MD5 | 见私仓 `md5_checksums.txt` |
+
+**schema**:`height, area_m2, is_supertall, floors, floors_source, euluc_class,
+euluc_out, mall_signal, hotel_signal, mixed_use_candidate, archetype, label_rule, geometry`。
+
+### 覆盖率四个数(`a6_coverage_stats.csv`)
+
+| 口径 | n | rule-labeled | ML(占位) | unknown | height-complete |
+|---|---|---|---|---|---|
+| 全市 | 843,062 | 58.07% | 0% | 41.93% | 99.997%(28 栋超高层未配 = NA+flag) |
+| EULUC-scoped | 787,696 | 62.11% | 0% | 37.89% | 99.997% |
+
+- **unknown 结构**:全市 353,526 unknown 中,EULUC 公园(Class 10)172,759 +
+  工业(Class 3)125,718 + euluc_out 55,049。即 ~35% 全市建筑落**14 类
+  UBEM 口径外的用地**(公园绿地 / 工业),非打标失败;送 Module B / 待 owner
+  定夺是否给工业/绿地内村居建独立处置。
+
+### 规则打标 accuracy(`a6_validation_diagnostics.csv`)
+
+- 整体粗类 accuracy **42.3%**(n=156);参照 **EULUC-direct-only 55.1%**(n=136 在 parcel 内)。
+  差值系 POI mall/hotel 覆盖(优先级 ③④>⑤)—— 尤其 hotel `100200`(公寓式酒店)
+  在住宅楼过度挂靠;是否降级/剔除待 owner 裁。
+- 10 层线 ±2 扰动 residential mid/high 翻转率 **6.2%**(n=48)。
+- 计票 A vs C:多码占比 8.21%;全市 argmax 翻转仅 20 栋(0.16%),validation 上 0 翻转
+  → **计票方案对结论不敏感**,采信守恒的方案 C。
+
+### 规则表(`config/a6_rules.yaml`)
+
+优先级 ① supertall(横切 flag)② mixed_use 候选 ③ mall ④ hotel ⑤ EULUC 直接命中类
+⑥ unknown。EULUC Class→archetype 的 `bundled_default`(Class 2 商业 / 9 体育文化 →
+other_public)与 `out_of_taxonomy`(Class 3 工业 / 10 公园 → unknown)两档系执行端
+保守默认,**待 owner 复核批准**。
