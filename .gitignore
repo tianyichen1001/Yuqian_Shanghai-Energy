@@ -153,3 +153,10 @@ scratch_data/
 # A4 EULUC-China 2.0 Shanghai clip (>100 MB, stored in private data repo per §4.6)
 data/raw/euluc/*.gpkg
 data/raw/euluc/*.gpkg.tmp
+
+# CNBH-10m Shanghai clip — metadata README tracked; rasters live in the
+# private data repo per §4.6 (never commit the tif/zip here)
+!/data/raw/cnbh/
+!/data/raw/cnbh/**
+/data/raw/cnbh/*.tif
+/data/raw/cnbh/*.zip
