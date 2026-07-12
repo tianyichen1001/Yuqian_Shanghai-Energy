@@ -1,0 +1,9 @@
+denominator,metric,value,ci95_lo,ci95_hi,n
+train_truth_153_oof,accuracy,53.6,45.8,61.4,153
+train_truth_153_oof,gfa_weighted_accuracy,66.0,50.5,79.3,153
+full_matched_156,accuracy,52.6,44.9,60.3,156
+full_matched_156,gfa_weighted_accuracy,65.7,50.4,79.2,156
+in_parcel_136,accuracy,54.4,46.3,62.5,136
+in_parcel_136,gfa_weighted_accuracy,65.7,49.1,79.5,136
+in_parcel_136,rule_full_baseline_a6,52.2,,,136
+in_parcel_136,rule_euluc_only_baseline_a6,54.4,,,136

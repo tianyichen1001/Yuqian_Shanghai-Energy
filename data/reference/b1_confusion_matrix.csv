@@ -1,0 +1,11 @@
+truth,culture,education,government_office,healthcare,mixed_use,office,other_public,residential,shopping_mall,unclear
+culture,0,0,0,0,0,1,0,2,0,0
+education,0,2,0,0,0,5,0,3,2,0
+government_office,0,0,0,1,0,2,0,1,0,0
+healthcare,0,0,1,0,0,1,0,1,0,0
+mixed_use,0,0,0,0,0,3,1,1,0,0
+office,0,1,0,3,1,20,0,6,6,1
+other_public,1,0,0,0,1,1,0,0,1,0
+residential,5,1,0,1,0,4,2,57,2,0
+shopping_mall,0,0,0,0,1,5,1,0,3,1
+unclear,0,0,0,0,0,0,1,0,0,0

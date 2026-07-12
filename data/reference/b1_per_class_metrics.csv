@@ -1,0 +1,11 @@
+class,n_truth_train,precision,recall,f1,learnable,note
+culture,3,0.0,0.0,0.0,False,"不可学,待 B2 补样"
+education,12,0.5,0.167,0.25,True,
+government_office,4,0.0,0.0,0.0,False,"不可学,待 B2 补样"
+healthcare,3,0.0,0.0,0.0,False,"不可学,待 B2 补样"
+mixed_use,5,0.0,0.0,0.0,True,
+office,38,0.476,0.526,0.5,True,
+other_public,4,0.0,0.0,0.0,False,"不可学,待 B2 补样"
+residential,72,0.803,0.792,0.797,True,
+shopping_mall,11,0.214,0.273,0.24,True,
+unclear,1,0.0,0.0,0.0,False,"不可学,待 B2 补样"
