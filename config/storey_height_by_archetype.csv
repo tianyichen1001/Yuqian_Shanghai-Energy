@@ -1,0 +1,18 @@
+# 分 archetype 规范层高 v0 — 物理高度正演输入(A5 决策:全段 height 为合成量,物理高度一律 GB 正演)
+# ⚠️ v0 草表:典型值按各类建筑设计规范惯用层高区间取中,依据列注明;owner 复核后定版
+# 用法:物理高度 = floors × storey_height_m;Module C shoebox floor_height_m 与本表一致(archetype YAML geometry)
+archetype,storey_height_m,basis,status
+government_office,3.9,"办公建筑设计标准 JGJ/T 67 常用净高+结构,3.6-4.2 取中",v0
+office,3.9,"同上",v0
+hotel,3.6,"旅馆建筑设计规范 JGJ 62 客房层惯例 3.3-3.9",v0
+shopping_mall,5.4,"商店建筑设计规范 JGJ 48 营业厅层高惯例 4.8-6.0",v0
+healthcare,4.2,"综合医院建筑设计规范 GB 51039 诊疗层惯例 3.9-4.5",v0
+education,3.9,"中小学校设计规范 GB 50099 教学用房 3.6-4.2",v0
+sport_culture,6.0,"场馆类大空间,层高离散度大;v0 占位,拆分后分设",v0
+transportation,6.0,"站房类大空间,v0 占位",v0
+exhibition,6.0,"展览建筑大空间,v0 占位",v0
+other_public,3.9,"参照办公",v0
+mixed_use_podium,5.1,"裙楼商业,参照商店建筑",v0
+mixed_use_tower,3.9,"塔楼办公,参照办公",v0
+residential_mid_rise,3.0,"GB 50096 住宅层高 2.8-3.0 上限惯例",v0
+residential_high_rise,3.0,"同上",v0
