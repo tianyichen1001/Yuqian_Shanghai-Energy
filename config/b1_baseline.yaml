@@ -1,0 +1,60 @@
+# =============================================================================
+# config/b1_baseline.yaml
+# Module B — B1 基线版(ML archetype 推断)可调参数
+# =============================================================================
+#
+# 用途:scripts/b1_baseline.py 读取本文件。B1 定性 = 摸底不是考试(工作令
+# 2026-07-12):结果无论好坏都收账,不预设准确率数字。
+# 特征纪律:仅 master + EULUC,零 POI 特征(A6.2 空间不均匀教训);
+#           district 不进特征(n 太小防伪相关)。
+# =============================================================================
+
+meta:
+  stage: "B1 baseline"
+  created: "2026-07-12"
+  notes: |
+    训练真值 = validation 156 annotated 剔除 V009/V096/V141(待改判,
+    §6 改判后门),类体系 = 真值实际出现的类(人工标注为准)。
+    mall(1,110)/mixed_use 候选(319)规则弱标签不作训练真值(§2 2026-07-11)。
+
+seed: 20260712
+metric_epsg: 32651            # 全项目米制口径(同 a6_rules.yaml supertall.metric_epsg)
+
+truth:
+  exclude_val_ids: ["V009", "V096", "V141"]   # 剔出训练真值;保留进 B2 清单头部
+  match_max_distance_m: 10    # validation→master 匹配兜底距离(复用 A6 逻辑)
+  expected_matched: 156       # A6 既有口径:annotated 156 全匹配
+  expected_in_parcel: 136     # A6 既有口径:euluc_class 非空子集
+  min_learnable_n: 5          # 样本 <5 的类如实入表并标记"不可学,待 B2 补样"
+
+features:
+  neighborhood_radius_m: 100  # 邻域系:100m 内楼栋数 / 邻居 footprint 中位数
+  aspect_ratio_min_side_m: 0.5   # 最小外接矩形短边低于此值视为退化,aspect 取中位数回填
+  no_neighbor_fill: 0.0       # 100m 无邻居时 nbr_fp_med_m2 回填值(n_bld_100m=0 已携带该信息)
+  supertall_floors_impute: "median_matched_supertall"  # 28 栋 floors=NA 仅特征层面回填,不回写数据
+
+cv:
+  grid_size_m: 5000           # 空间分组:~5km 网格 cell 作 GroupKFold 组(防泄漏)
+  n_splits: 5
+
+model:                        # RandomForest 基线;不做 SMOTE(基线纪律)
+  n_estimators: 500
+  max_depth: null
+  min_samples_leaf: 1
+  class_weight: "balanced"
+
+evaluation:
+  bootstrap_n: 10000          # 95% CI(percentile bootstrap,重抽评估样本)
+  rule_baselines:             # 对比口径(A6 diagnostics,in-parcel n=136 同分母)
+    full_rule_in_parcel_pct: 52.2
+    euluc_only_pct: 54.4
+  confidence_bin_width: 0.1
+
+b2:                           # B2 补标清单分层设计(工作令 2026-07-12)
+  hotel_n: 16                 # 规则 hotel 命中池;模型高/低置信各半
+  sport_culture_n: 18         # bundled sport_culture 池;按 footprint 四分位分层(供拆分)
+  floors_bins: [1, 4, 7, 10, 19, 33]   # 左闭;末箱 33+;NA(supertall 未配)不入箱
+  floors_per_bin: 7           # 6 箱 × 7 = 42
+  low_conf_n_citywide: 20     # 全市低置信(跨预测类,底部十分位)
+  low_conf_quota_lingang: 10  # 临港窗口配额(窗口内置信度最低三分位)
+  low_conf_quota_zhangjiang: 10
