@@ -75,7 +75,12 @@ def main() -> None:
            "# v0 = 管线验证值,非终值,禁止引用作结果;sanity 不调参,偏差如实记录\n"
            f"# 引擎: EnergyPlus {engine['energyplus']['version']}-"
            f"{engine['energyplus']['build_sha']} | 气象: CSWD 583620 | "
-           f"分母: 空调面积 {area:.0f} m²(shoebox)\n")
+           f"分母: 全楼面面积 {area:.0f} m²(shoebox,与王 144 点建筑面积口径同基)\n"
+           f"# 换算链: IdealLoads 热量 ÷ COP(冷 {arch['hvac']['cop_cooling']} / "
+           f"热 {arch['hvac']['cop_heating']},v0 假定值,config hvac 节)→ 电耗;"
+           "照明/设备电表直读\n"
+           "# 已知偏差源: CSWD 典型气象年 vs 王矩阵近年实际运行年(近年夏偏热,"
+           "供冷侧倾向偏低);敏感性归 TMYx 段\n")
     with open(ref / "c1_office_v0_monthly.csv", "w", encoding="utf-8-sig") as f:
         f.write(hdr)
         table.to_csv(f, index=False)
