@@ -1,0 +1,50 @@
+# =============================================================================
+# config/archetypes/mixed_use_tower.yaml — 综合体塔楼(办公侧):参照办公;锁定基线拆子结构
+# =============================================================================
+# ⚠️ v0 = 管线验证值,非终值,禁止引用作结果;限值与工况系二手转录/惯例
+#    近似(官方全文会话网络不可达,2026-07-12),owner 复核后修订。
+# 围护结构:公建按 GB 50189-2015 表 3.3.1-4(夏热冬冷甲类);住宅按
+# JGJ 134-2010。内扰依据:参照办公(锁定基线:塔楼办公)。层高与
+# config/storey_height_by_archetype.csv 同步。
+
+archetype: mixed_use_tower
+version: v0
+
+geometry:
+  n_floors: 1                  # 矩阵按高度箱覆盖(config/simulation_matrix.yaml)
+  floor_height_m: 3.9
+  wwr: {north: 0.4, east: 0.4, south: 0.4, west: 0.4}
+
+envelope:
+  wall_u: 0.6
+  roof_u: 0.4
+  window_u: 2.6            # 对应 WWR 档限值
+  window_shgc: 0.4
+  ground_slab_r: 1.2
+
+internal_loads:
+  occupancy_m2_per_person: 10
+  lighting_w_per_m2: 9
+  equipment_w_per_m2: 15
+  fresh_air_m3h_per_person: 30
+
+hvac:
+  heating_setpoint_c: 20
+  cooling_setpoint_c: 26
+  setback_heating_c: 12.0
+  setback_cooling_c: 37.0
+  cop_cooling: 3.5             # v0 典型值,校准变量
+  cop_heating: 2.5
+  infiltration_ach: 0.5
+
+schedules:
+  weekday:
+    hvac_hours: [7, 18]
+    occupancy: [0,0,0,0,0,0,0,0.1,0.5,0.95,0.95,0.95,0.8,0.95,0.95,0.95,0.95,0.5,0.25,0,0,0,0,0]
+    lighting:  [0,0,0,0,0,0,0,0.1,0.5,0.95,0.95,0.95,0.8,0.95,0.95,0.95,0.95,0.5,0.25,0.05,0.05,0.05,0.05,0.05]
+    equipment: [0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.1,0.5,0.95,0.95,0.95,0.5,0.95,0.95,0.95,0.95,0.5,0.25,0.05,0.05,0.05,0.05,0.05]
+  weekend:
+    hvac_hours: null
+    occupancy: [0,0,0,0,0,0,0,0,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0,0,0,0,0,0,0]
+    lighting:  [0,0,0,0,0,0,0,0,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0,0,0,0,0,0,0]
+    equipment: [0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.05,0.05,0.05,0.05,0.05,0.05,0.05]

@@ -1,0 +1,50 @@
+# =============================================================================
+# config/simulation_matrix.yaml
+# Module C 模拟矩阵定义:archetype × 高度箱(块 2,2026-07-12 工作令)
+# =============================================================================
+#
+# 行 = 14:12 公建行(Wang 12 类中 sports+culture 暂按 A6 捆绑口径合并为
+# sport_culture,拆分后矩阵行随之扩;mixed_use 按锁定基线"裙楼商业+塔楼
+# 办公垂直复合体"拆 podium/tower 两子结构各自入矩阵)+ 住宅 2 档。
+# 列 = 4 高度箱。14×4=56,excluded 4 格 → **52 格**。
+#
+# 高度箱分档依据(GB 50352-2019 民用建筑设计统一标准 3.1.2 分类惯例 +
+# GB 50016-2014 防火分类):低层 ≤3 层;多层 4 层至 24m;高层 >24m 且
+# ≤100m;超高层 >100m。代表层数为 v0 管线验证选点(箱内中位习惯值),
+# 层高按 config/storey_height_by_archetype.csv 分 archetype 取值。
+
+height_bins:
+  low:       {n_floors: 2,  basis: "低层 ≤3 层(GB 50352-2019)"}
+  multi:     {n_floors: 5,  basis: "多层 4 层~24m(GB 50352-2019)"}
+  high:      {n_floors: 15, basis: "高层 >24m 且 ≤100m(GB 50352-2019/GB 50016)"}
+  supertall: {n_floors: 35, basis: ">100m 超高层(GB 50352-2019 3.1.2)"}
+
+archetypes:                  # 矩阵行;YAML 一一对应 config/archetypes/<name>.yaml
+  - government_office
+  - office
+  - hotel
+  - shopping_mall
+  - healthcare
+  - education
+  - sport_culture            # A6 捆绑口径(全市 6,107 栋),B2 补标后评估拆分
+  - transportation
+  - exhibition
+  - other_public
+  - mixed_use_podium         # 综合体裙楼(商业侧参数)
+  - mixed_use_tower          # 综合体塔楼(办公侧参数)
+  - residential_mid_rise
+  - residential_high_rise
+
+excluded:                    # 不适用组合,共 4 格(56−4=52)
+  - {archetype: residential_mid_rise,  bin: high,
+     reason: "锁定基线 10 层分界:mid_rise ≤9 层,高层箱(15 层)不适用"}
+  - {archetype: residential_mid_rise,  bin: supertall,
+     reason: "同上,住宅×超高即工作令示例的排除格"}
+  - {archetype: residential_high_rise, bin: low,
+     reason: "high_rise ≥10 层,低层箱(2 层)不适用"}
+  - {archetype: residential_high_rise, bin: multi,
+     reason: "high_rise ≥10 层,多层箱(5 层)不适用"}
+
+run:
+  max_workers: 4             # 4 核容器
+  out_csv: "outputs/simulation/matrix_v0_monthly_eui.csv"

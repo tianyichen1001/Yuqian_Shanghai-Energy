@@ -1,0 +1,50 @@
+# =============================================================================
+# config/archetypes/mixed_use_podium.yaml — 综合体裙楼(商业侧):参照商场;锁定基线拆子结构
+# =============================================================================
+# ⚠️ v0 = 管线验证值,非终值,禁止引用作结果;限值与工况系二手转录/惯例
+#    近似(官方全文会话网络不可达,2026-07-12),owner 复核后修订。
+# 围护结构:公建按 GB 50189-2015 表 3.3.1-4(夏热冬冷甲类);住宅按
+# JGJ 134-2010。内扰依据:参照商场(锁定基线:裙楼商业)。层高与
+# config/storey_height_by_archetype.csv 同步。
+
+archetype: mixed_use_podium
+version: v0
+
+geometry:
+  n_floors: 1                  # 矩阵按高度箱覆盖(config/simulation_matrix.yaml)
+  floor_height_m: 5.1
+  wwr: {north: 0.25, east: 0.25, south: 0.25, west: 0.25}
+
+envelope:
+  wall_u: 0.6
+  roof_u: 0.4
+  window_u: 3.0            # 对应 WWR 档限值
+  window_shgc: 0.44
+  ground_slab_r: 1.2
+
+internal_loads:
+  occupancy_m2_per_person: 8
+  lighting_w_per_m2: 10
+  equipment_w_per_m2: 13
+  fresh_air_m3h_per_person: 20
+
+hvac:
+  heating_setpoint_c: 18
+  cooling_setpoint_c: 26
+  setback_heating_c: 12.0
+  setback_cooling_c: 37.0
+  cop_cooling: 3.5             # v0 典型值,校准变量
+  cop_heating: 2.5
+  infiltration_ach: 0.5
+
+schedules:
+  weekday:
+    hvac_hours: [9, 22]
+    occupancy: [0,0,0,0,0,0,0,0,0,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0,0]
+    lighting:  [0,0,0,0,0,0,0,0,0,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0,0]
+    equipment: [0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.05,0.05]
+  weekend:
+    hvac_hours: [9, 22]
+    occupancy: [0,0,0,0,0,0,0,0,0,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0,0]
+    lighting:  [0,0,0,0,0,0,0,0,0,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0,0]
+    equipment: [0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.05,0.05]
