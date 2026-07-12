@@ -1,0 +1,53 @@
+# =============================================================================
+# config/c_engine.yaml
+# Module C 引擎级参数(与 archetype 无关的运行设置)
+# =============================================================================
+#
+# EnergyPlus 版本钉死 26.1.0(build 6f2e40d102):安装与校验链见
+# scripts/c_engine/README.md。eplus_dir 可被环境变量 BS_EPLUS_DIR 或
+# CLI --eplus-dir 覆盖(容器路径不属于 repo,不算硬编码绝对路径)。
+
+energyplus:
+  version: "26.1.0"
+  build_sha: "6f2e40d102"
+  default_dir: "/opt/EnergyPlus-26.1.0"   # 覆盖顺序: CLI > BS_EPLUS_DIR > 此值
+
+weather:
+  # 主跑 CSWD(WMO 583620 宝山);TMYx 留论文敏感性段(本阶段不跑)
+  epw: "weather/CHN_SH_Shanghai.583620_CSWD.epw"        # 相对 project root
+  epw_sensitivity: "weather/CHN_SH_Shanghai-Baoshan.583620_TMYx.2011-2025.epw"
+
+simulation:
+  timestep_per_hour: 4
+  run_period: {begin_month: 1, begin_day: 1, end_month: 12, end_day: 31}
+
+shoebox:
+  # ASHRAE 5-zone(core + 4 perimeter);全部可参数化,此处为默认
+  footprint_x_m: 10.0
+  footprint_y_m: 10.0
+  floor_height_m: 3.0
+  perimeter_depth_m: 3.0
+  orientation_deg: 0.0          # 建筑北偏角
+  # 多层表示:1 层=地面+屋面;2 层=底层+顶层;>=3 层=底/中(乘数)/顶三片
+  # 中间片 floor/ceiling 绝热,zone multiplier = n_floors - 2
+
+thermal_mass:
+  # 数值稳定性用内衬质量层(全 NoMass 构造会发散,E+ warmup 实测)。
+  # 属引擎常数而非 GB 校准参数;U 值换算时其导热阻自动从 NoMass 层扣除。
+  thickness_m: 0.10
+  conductivity_w_mk: 1.7        # 普通混凝土
+  density_kg_m3: 2300.0
+  specific_heat_j_kgk: 900.0
+
+envelope_films:
+  # GB 的 K 值含内外表面换热阻;E+ 不透明构造 U 不含膜。
+  # NoMass 层热阻 R = 1/K - (r_si + r_se)。窗用 SimpleGlazingSystem(自含膜)。
+  wall_r_si: 0.11
+  wall_r_se: 0.04
+  roof_r_si: 0.10
+  roof_r_se: 0.04
+
+outputs:
+  # 运行产物目录(gitignored 的部分);入库产物走 data/reference 或
+  # outputs/ 的显式 .gitignore 例外
+  run_root: "outputs/simulation/runs"

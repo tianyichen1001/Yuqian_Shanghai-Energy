@@ -84,7 +84,16 @@ ipython_config.py
 /data/raw/*
 /data/interim/*
 /data/processed/*
-/outputs/
+# outputs 默认忽略;少量入库产物走文件级白名单(目录整体 exclude 时
+# 无法 re-include 内部文件,故用 /outputs/* 形式)
+/outputs/*
+!/outputs/figures/
+/outputs/figures/*
+!/outputs/figures/c_engine/
+!/outputs/figures/c_engine/*.png
+!/outputs/simulation/
+/outputs/simulation/*
+!/outputs/simulation/matrix_v0_monthly_eui.csv
 /weather/*.epw
 /weather/*.stat
 /weather/*.ddy
