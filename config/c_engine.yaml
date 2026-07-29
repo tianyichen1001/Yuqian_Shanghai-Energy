@@ -26,7 +26,7 @@ shoebox:
   footprint_x_m: 10.0
   footprint_y_m: 10.0
   floor_height_m: 3.0
-  perimeter_depth_m: 3.0
+  perimeter_depth_m: 1.0
   orientation_deg: 0.0          # 建筑北偏角
   # 多层表示:1 层=地面+屋面;2 层=底层+顶层;>=3 层=底/中(乘数)/顶三片
   # 中间片 floor/ceiling 绝热,zone multiplier = n_floors - 2
