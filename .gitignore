@@ -94,6 +94,8 @@ ipython_config.py
 !/outputs/simulation/
 /outputs/simulation/*
 !/outputs/simulation/matrix_v0_monthly_eui.csv
+!/outputs/simulation/matrix_v0_monthly_eui_v0_3m.csv
+!/outputs/simulation/eui_comparison_v0_3m_vs_v1_1m.csv
 /weather/*.epw
 /weather/*.stat
 /weather/*.ddy
