@@ -1,0 +1,12 @@
+class,n_truth,precision,recall,f1
+culture,4,0.0,0.0,0.0
+education,17,0.364,0.235,0.286
+government_office,6,0.0,0.0,0.0
+healthcare,3,0.0,0.0,0.0
+hotel,4,0.0,0.0,0.0
+mixed_use,1,0.0,0.0,0.0
+office,54,0.574,0.648,0.609
+other_public,4,0.125,0.25,0.167
+residential,133,0.833,0.827,0.83
+shopping_mall,4,0.0,0.0,0.0
+sports,1,0.0,0.0,0.0
