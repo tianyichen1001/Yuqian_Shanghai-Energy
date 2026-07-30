@@ -1,0 +1,42 @@
+# =============================================================================
+# config/b2_rf_training.yaml
+# Module B — B2 正式 RF 模型训练 + 全量预测
+# =============================================================================
+#
+# 训练真值 = B2 人工标注 95 栋 + validation 156 中可用部分
+# （剔除弱标签 mall/mixed_use + unclear）。
+# 超参对齐 Yuqian (buildings.city V2.0 ml-service)。
+# =============================================================================
+
+meta:
+  stage: "B2 formal RF"
+  created: "2026-07-30"
+  notes: |
+    B2 人工标注完成后的正式训练。弱标签铁律不变：
+    mall（1,110 栋）和 mixed_use 候选（319 栋）不得作训练真值。
+    B2 人工标注中的 shopping_mall/mixed_use 是人工确认的，可入训练。
+
+seed: 20260730
+metric_epsg: 32651
+
+truth:
+  match_max_distance_m: 10
+  weak_labels: ["shopping_mall", "mixed_use"]
+
+features:
+  neighborhood_radius_m: 100
+  aspect_ratio_min_side_m: 0.5
+  no_neighbor_fill: 0.0
+
+cv:
+  grid_size_m: 5000
+  n_splits: 5
+
+model:
+  n_estimators: 500
+  max_depth: null
+  min_samples_leaf: 1
+  class_weight: "balanced"
+  # Yuqian 的 (depth=20, split=10, leaf=4) 在 231 样本 11 类极端不平衡下
+  # 配 balanced 崩至 17.3%、不配则只输出 2 类。
+  # B1 参数 (depth=null, leaf=1, balanced) 64.9% 且全 11 类均可输出。

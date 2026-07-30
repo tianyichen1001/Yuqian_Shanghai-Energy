@@ -1,0 +1,12 @@
+truth,culture,education,government_office,healthcare,hotel,mixed_use,office,other_public,residential,shopping_mall,sports
+culture,0,0,0,0,0,0,0,0,3,1,0
+education,0,4,0,0,1,0,5,2,4,1,0
+government_office,0,0,0,1,0,0,2,0,3,0,0
+healthcare,0,0,0,0,1,0,2,0,0,0,0
+hotel,0,0,0,1,0,0,2,0,1,0,0
+mixed_use,0,0,0,0,0,0,1,0,0,0,0
+office,0,3,0,1,3,1,35,1,10,0,0
+other_public,0,1,0,0,0,0,1,1,1,0,0
+residential,0,2,4,0,1,0,11,4,110,0,1
+shopping_mall,1,1,1,0,0,0,1,0,0,0,0
+sports,0,0,0,0,0,0,1,0,0,0,0
