@@ -169,3 +169,4 @@ data/raw/euluc/*.gpkg.tmp
 !/data/raw/cnbh/**
 /data/raw/cnbh/*.tif
 /data/raw/cnbh/*.zip
+data/raw/poi/a3b_pois_raw.jsonl
