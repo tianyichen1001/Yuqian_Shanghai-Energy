@@ -130,6 +130,7 @@ def load_ground_truth(cfg: dict) -> pd.DataFrame:
                     "val_id": row.get("val_id", ""),
                     "lat": float(row["lat"]),
                     "lon": float(row["lon"]),
+                    "master_idx": None,    # set by spatial matching
                     "archetype": label,
                     "floors_observed": row.get("floors_observed"),
                     "source": "v0",
@@ -141,11 +142,43 @@ def load_ground_truth(cfg: dict) -> pd.DataFrame:
 
     n_v0 = len(records)
 
-    # --- 2) b2_annotation_list (actual_class 若填) ---
-    b2_path = PROJECT_ROOT / cfg["truth"]["b2_csv"]
+    # --- 2) B2 xlsx (119栋人工标注, 优先于 b2_csv) ---
+    b2_xlsx_path = PROJECT_ROOT / cfg["truth"].get("b2_xlsx", "")
+    b2_csv_path = PROJECT_ROOT / cfg["truth"].get("b2_csv", "")
     n_b2_loaded = 0
-    if b2_path.exists():
-        with open(b2_path) as fh:
+
+    if b2_xlsx_path and b2_xlsx_path.exists():
+        b2 = pd.read_excel(b2_xlsx_path, sheet_name="B2标注119栋")
+        arch_col_b2 = "建筑类型(填英文)"
+        fl_col_b2 = "你看到几层"
+        for _, row in b2.iterrows():
+            raw_arch = row.get(arch_col_b2)
+            if pd.isna(raw_arch):
+                continue
+            raw_arch_str = str(raw_arch).strip()
+            if raw_arch_str in ("unclear", "shopping_mall+residential"):
+                continue
+            fl_raw = row.get(fl_col_b2)
+            try:
+                floors_val = float(fl_raw) if fl_raw not in (None, "unclear") and pd.notna(fl_raw) else None
+            except (TypeError, ValueError):
+                floors_val = None
+            label = standardise_label(raw_arch_str, floors_val, cfg)
+            if label:
+                master_idx = int(row["bid"]) - 1   # bid is 1-based
+                records.append({
+                    "val_id": f"B2_{int(row['bid'])}",
+                    "lat": np.nan, "lon": np.nan,
+                    "master_idx": master_idx,       # pre-set; skip spatial matching
+                    "archetype": label,
+                    "floors_observed": floors_val,
+                    "source": "b2",
+                })
+                n_b2_loaded += 1
+        _log(f"  B2 xlsx (119栋): {n_b2_loaded} 栋有效标注")
+
+    elif b2_csv_path and b2_csv_path.exists():
+        with open(b2_csv_path) as fh:
             raw_lines = [l for l in fh.readlines()
                          if not l.lstrip("﻿").startswith("#")]
         b2 = pd.read_csv(pd.io.common.StringIO("".join(raw_lines)))
@@ -155,8 +188,8 @@ def load_ground_truth(cfg: dict) -> pd.DataFrame:
             if label:
                 records.append({
                     "val_id": f"B2_{row['bid']}",
-                    "lat": float(row["lat_wgs84"]),
-                    "lon": float(row["lon_wgs84"]),
+                    "lat": float(row["lat_wgs84"]), "lon": float(row["lon_wgs84"]),
+                    "master_idx": None,
                     "archetype": label,
                     "floors_observed": row.get("actual_floors"),
                     "source": "b2",
@@ -166,54 +199,61 @@ def load_ground_truth(cfg: dict) -> pd.DataFrame:
             _log("  ⚠ b2_annotation_list_v0.csv: actual_class 全部为空 — B2 补标尚未填写!")
             missing_files.append("b2_annotations_unfilled")
         else:
-            _log(f"  b2 补标: {n_b2_loaded} 栋有效")
+            _log(f"  b2 csv 补标: {n_b2_loaded} 栋有效")
     else:
-        missing_files.append(str(b2_path))
+        missing_files.append("b2_annotation_file_missing")
+        _log("  ⚠ B2 标注文件不存在")
 
     # --- 3) smallclass_verification_20260803.xlsx (若存在) ---
     sc_path = PROJECT_ROOT / cfg["truth"]["smallclass_xlsx"]
     n_sc_loaded = 0
     if sc_path.exists():
         sc = pd.read_excel(sc_path)
-        # Expected columns: bid or (lat, lon), archetype, floors (optional)
-        lat_col = next((c for c in sc.columns if "lat" in c.lower()), None)
-        lon_col = next((c for c in sc.columns if "lon" in c.lower()), None)
+        lat_col = next((c for c in sc.columns if c.lower() == "lat"), None)
+        lon_col = next((c for c in sc.columns if c.lower() == "lon"), None)
         arch_col = next((c for c in sc.columns
-                         if any(k in c.lower() for k in ["archetype", "class", "type"])), None)
-        fl_col = next((c for c in sc.columns
-                       if any(k in c.lower() for k in ["floor", "层数"])), None)
-        if lat_col and lon_col and arch_col:
+                         if "archetype" in c.lower() and "your" in c.lower()), None)
+        fl_col = next((c for c in sc.columns if "floor" in c.lower() and "your" in c.lower()), None)
+        midx_col = next((c for c in sc.columns if c.lower() == "master_idx"), None)
+        if arch_col:
             for _, row in sc.iterrows():
-                label = standardise_label(
-                    row[arch_col],
-                    row.get(fl_col) if fl_col else None, cfg,
-                )
+                raw_arch = row.get(arch_col)
+                if pd.isna(raw_arch):
+                    continue
+                raw_arch_str = str(raw_arch).strip()
+                if raw_arch_str in ("unclear",):
+                    continue
+                fl_raw = row.get(fl_col) if fl_col else None
+                try:
+                    floors_val = float(fl_raw) if fl_raw not in (None, "unclear") and pd.notna(fl_raw) else None
+                except (TypeError, ValueError):
+                    floors_val = None
+                label = standardise_label(raw_arch_str, floors_val, cfg)
                 if label:
-                    records.append({
-                        "val_id": f"SC_{row.get('bid', n_sc_loaded)}",
-                        "lat": float(row[lat_col]),
-                        "lon": float(row[lon_col]),
+                    midx = int(row[midx_col]) if midx_col and pd.notna(row.get(midx_col)) else None
+                    rec = {
+                        "val_id": f"SC_{int(row['seq']) if 'seq' in sc.columns else n_sc_loaded}",
+                        "lat": float(row[lat_col]) if lat_col else np.nan,
+                        "lon": float(row[lon_col]) if lon_col else np.nan,
+                        "master_idx": midx,     # pre-set from xlsx
                         "archetype": label,
-                        "floors_observed": row.get(fl_col) if fl_col else None,
+                        "floors_observed": floors_val,
                         "source": "smallclass",
-                    })
+                    }
+                    records.append(rec)
                     n_sc_loaded += 1
             _log(f"  smallclass xlsx: {n_sc_loaded} 栋有效")
         else:
             _log(f"  ⚠ smallclass xlsx: 无法识别列名 (cols={sc.columns.tolist()[:8]})")
     else:
         missing_files.append(str(sc_path))
-        _log("  ⚠ smallclass_verification_20260803.xlsx 不存在 — 新 63 栋小类别验证缺失!")
+        _log("  ⚠ smallclass_verification_20260803.xlsx 不存在 — 新小类别验证缺失!")
 
+    _log(f"  合计真值: {len(records)} 栋 (v0={n_v0}, b2={n_b2_loaded}, smallclass={n_sc_loaded})")
     if missing_files:
-        _log("")
-        _log("  ═══ 数据缺口报告 ═══")
-        _log(f"  期望总计 ~294 栋人工真值 (v0 156 + B2 75 + smallclass 63)")
-        _log(f"  实际可用: {len(records)} 栋")
-        _log(f"  缺失/未填:")
+        _log("  ⚠ 缺失来源:")
         for f in missing_files:
             _log(f"    - {f}")
-        _log("  → 以可用数据继续 B3 训练")
         _log("")
 
     df = pd.DataFrame(records)
@@ -257,40 +297,49 @@ def split_train_test(gt: pd.DataFrame, cfg: dict) -> tuple[pd.DataFrame, pd.Data
 
 def match_to_master(gt: pd.DataFrame, master: gpd.GeoDataFrame,
                     match_max_dist_m: float, metric_epsg: int) -> pd.DataFrame:
-    """将真值坐标匹配到 master.gpkg 行，返回 gt + master_row_idx 列。"""
+    """将真值坐标匹配到 master.gpkg 行，返回 gt + master_idx 列。
+    Records with master_idx already set (B2/smallclass direct match) skip the spatial join.
+    """
     if len(gt) == 0:
-        return gt.assign(master_idx=-1)
-
-    pts = gpd.GeoDataFrame(
-        gt, geometry=gpd.points_from_xy(gt["lon"], gt["lat"]), crs=4326
-    )
-    gm_geom = gpd.GeoDataFrame({"midx": np.arange(len(master))},
-                                geometry=master.geometry, crs=master.crs)
-
-    # within join
-    joined = gpd.sjoin(pts, gm_geom, predicate="within", how="left")
-    joined = joined[~joined.index.duplicated(keep="first")]
-    miss = joined.index[joined["midx"].isna()]
-
-    # nearest fallback
-    if len(miss):
-        nn = gpd.sjoin_nearest(
-            pts.loc[miss].to_crs(metric_epsg),
-            gm_geom.to_crs(metric_epsg),
-            max_distance=match_max_dist_m, how="left",
-        )
-        nn = nn[~nn.index.duplicated(keep="first")]
-        joined.loc[miss, "midx"] = nn["midx"]
+        return gt.assign(master_idx=pd.array([], dtype="Int64"))
 
     gt = gt.copy()
-    gt["master_idx"] = np.nan
-    # index-based alignment: joined row order may differ from gt row order after sjoin
-    midx_series = joined["midx"]
-    for idx, midx_val in midx_series.items():
-        if idx in gt.index and not pd.isna(midx_val):
-            gt.loc[idx, "master_idx"] = midx_val
+    if "master_idx" not in gt.columns:
+        gt["master_idx"] = pd.NA
+
+    # Rows needing spatial matching (master_idx not yet set)
+    need_mask = gt["master_idx"].isna()
+    n_pre = int((~need_mask).sum())
+    need_match = gt[need_mask].copy()
+
+    if len(need_match) > 0:
+        pts = gpd.GeoDataFrame(
+            need_match,
+            geometry=gpd.points_from_xy(need_match["lon"], need_match["lat"]),
+            crs=4326,
+        )
+        gm_geom = gpd.GeoDataFrame({"midx": np.arange(len(master))},
+                                    geometry=master.geometry, crs=master.crs)
+
+        joined = gpd.sjoin(pts, gm_geom, predicate="within", how="left")
+        joined = joined[~joined.index.duplicated(keep="first")]
+        miss = joined.index[joined["midx"].isna()]
+
+        if len(miss):
+            nn = gpd.sjoin_nearest(
+                pts.loc[miss].to_crs(metric_epsg),
+                gm_geom.to_crs(metric_epsg),
+                max_distance=match_max_dist_m, how="left",
+            )
+            nn = nn[~nn.index.duplicated(keep="first")]
+            joined.loc[miss, "midx"] = nn["midx"]
+
+        for idx, midx_val in joined["midx"].items():
+            if idx in gt.index and not pd.isna(midx_val):
+                gt.loc[idx, "master_idx"] = midx_val
+
     n_matched = gt["master_idx"].notna().sum()
-    _log(f"  master 匹配: {n_matched}/{len(gt)} 栋")
+    _log(f"  master 匹配: {n_matched}/{len(gt)} 栋 ({n_pre} 直接, {n_matched - n_pre} 空间匹配)")
     return gt
 
 
@@ -433,8 +482,15 @@ def prepare_train_test_arrays(
     train_matched["master_idx"] = train_matched["master_idx"].astype(int)
     t1_midx = train_matched["master_idx"].to_numpy()
     t1_arch = train_matched["archetype"].to_numpy()
-    t1_lat = train_matched["lat"].to_numpy()
-    t1_lon = train_matched["lon"].to_numpy()
+    t1_lat = train_matched["lat"].to_numpy(dtype=float)
+    t1_lon = train_matched["lon"].to_numpy(dtype=float)
+
+    # Fill NaN lat/lon from master centroids (B2 records have no field coordinates)
+    nan_ll = np.isnan(t1_lat)
+    if nan_ll.any():
+        centroid_fill = master_attr.loc[t1_midx[nan_ll], ["centroid_lat", "centroid_lon"]].to_numpy()
+        t1_lat[nan_ll] = centroid_fill[:, 0]
+        t1_lon[nan_ll] = centroid_fill[:, 1]
 
     # Tier 2+3 (from master_attr, index=master rownum)
     t23_valid = tier23[tier23["master_idx"].isin(X_df.index)].copy()
@@ -458,8 +514,15 @@ def prepare_train_test_arrays(
     t_midx = test_matched["master_idx"].to_numpy()
     X_test = X_df.loc[t_midx].to_numpy()
     y_test_raw = test_matched["archetype"].to_numpy()
-    lat_test = test_matched["lat"].to_numpy()
-    lon_test = test_matched["lon"].to_numpy()
+    lat_test = test_matched["lat"].to_numpy(dtype=float)
+    lon_test = test_matched["lon"].to_numpy(dtype=float)
+
+    # Fill NaN lat/lon from master centroids (B2 records in test have no field coordinates)
+    nan_ll_test = np.isnan(lat_test)
+    if nan_ll_test.any():
+        centroid_fill_test = master_attr.loc[t_midx[nan_ll_test], ["centroid_lat", "centroid_lon"]].to_numpy()
+        lat_test[nan_ll_test] = centroid_fill_test[:, 0]
+        lon_test[nan_ll_test] = centroid_fill_test[:, 1]
 
     _log(f"  训练集: {len(X_train):,} | 测试集: {len(X_test):,}")
     return (X_train, y_train_raw, lat_train, lon_train,

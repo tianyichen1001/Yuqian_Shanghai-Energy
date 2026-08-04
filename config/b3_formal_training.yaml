@@ -32,6 +32,7 @@ metric_epsg: 32651               # 米制投影(全项目统一)
 truth:
   v0_csv: "data/raw/validation/shanghai_validation_set_v0.csv"
   b2_csv: "data/raw/validation/b2_annotation_list_v0.csv"
+  b2_xlsx: "data/raw/validation/b2_annotation_v0.xlsx"      # 119栋人工标注 xlsx (优先于 b2_csv)
   smallclass_xlsx: "data/raw/validation/smallclass_verification_20260803.xlsx"
   exclude_val_ids: ["V009", "V096", "V141"]   # B1 遗留改判后门
   match_max_distance_m: 10        # validation→master 空间匹配兜底距离
