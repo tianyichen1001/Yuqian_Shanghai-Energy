@@ -170,3 +170,6 @@ data/raw/euluc/*.gpkg.tmp
 /data/raw/cnbh/*.tif
 /data/raw/cnbh/*.zip
 data/raw/poi/a3b_pois_raw.jsonl
+
+# CatBoost training artifacts
+catboost_info/

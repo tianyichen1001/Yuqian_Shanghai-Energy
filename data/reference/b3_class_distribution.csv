@@ -1,0 +1,14 @@
+archetype,tier1_train,tier1_test,tier23_train,total_train
+hotel,3,12,6664,6667
+sports,1,11,6107,6108
+residential_mid_rise,61,31,5625,5686
+education,12,8,5000,5012
+residential_high_rise,32,15,1875,1907
+office,38,23,0,38
+shopping_mall,11,19,0,11
+government_office,4,4,0,4
+culture,3,8,0,3
+other_public,3,1,0,3
+mixed_use,3,4,0,3
+healthcare,2,1,0,2
+unclear,1,0,0,1

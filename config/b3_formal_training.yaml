@@ -1,0 +1,142 @@
+# =============================================================================
+# config/b3_formal_training.yaml
+# Module B — B3 正式训练版可调参数
+# =============================================================================
+#
+# Usage: scripts/b3_formal_training.py --data-dir <path_to_gpkg_dir>
+#        --best-model <rf|xgb|cat>  (Step 3, after Step 2 review)
+#        --predict                  (Step 4, after Step 3 review)
+#
+# B3 改进点 vs B1:
+#   - 三层训练数据(金标准+EULUC+规则)
+#   - 三模型对比(RF / XGBoost / CatBoost)
+#   - SMOTE 在每个 fold 内部(防泄漏)
+#   - GroupKFold 空间分组(0.01° 网格)
+#   - 超参数 grid search(Step 3)
+# =============================================================================
+
+meta:
+  stage: "B3 formal training"
+  created: "2026-08-04"
+  notes: |
+    金标准: validation 156 annotated (剔除 V009/V096/V141 不进训练集)
+    + b2 actual_class (若已填; 否则 skip 并警告)
+    + smallclass_verification_20260803.xlsx (若存在; 否则 skip 并警告)
+    EULUC 层: residential_mid_rise/high_rise + education (euluc_direct)
+    规则层: hotel + sport_culture (bundled, treated as sports)
+    禁用: mall(1110) / mixed_use(319) 规则弱标签 / culture OSM 标签
+
+seed: 42                          # 训练/测试 split + SMOTE + model random state
+metric_epsg: 32651               # 米制投影(全项目统一)
+
+truth:
+  v0_csv: "data/raw/validation/shanghai_validation_set_v0.csv"
+  b2_csv: "data/raw/validation/b2_annotation_list_v0.csv"
+  b2_xlsx: "data/raw/validation/b2_annotation_v0.xlsx"      # 119栋人工标注 xlsx (优先于 b2_csv)
+  smallclass_xlsx: "data/raw/validation/smallclass_verification_20260803.xlsx"
+  exclude_val_ids: ["V009", "V096", "V141"]   # B1 遗留改判后门
+  match_max_distance_m: 10        # validation→master 空间匹配兜底距离
+  test_fraction: 0.30             # 分层抽 30% 作测试集
+  min_learnable_n: 3              # 低于此样本数的类标记为稀有
+
+  # 标签标准化映射(v0.csv / b2 / smallclass 原始值 → 标准 snake_case)
+  label_map:
+    "residential": null           # null = 按 floors 拆分 mid/high
+    "mixed-use": "mixed_use"
+    "mixed use": "mixed_use"
+    "government office": "government_office"
+    "Government office": "government_office"
+    "govt_office": "government_office"
+    "shopping mall": "shopping_mall"
+    "sport_culture": "sports"     # 捆绑标签 → 作 sports(culture 丢弃)
+    "sports_culture": "sports"
+    "other public": "other_public"
+    "Other public": "other_public"
+  floor_cutoff: 10                # 住宅楼层分界: <10 → mid_rise, >=10 → high_rise
+
+tier2:
+  # EULUC 高置信标签: archetype==residential_* OR education, label_rule==euluc_direct
+  # residential 大量降采样防淹没小类别
+  residential_downsample_n: 7500    # 总 residential 保留数量
+  residential_mid_fraction: 0.75    # mid_rise 占 residential downsample 的比例
+  residential_high_fraction: 0.25
+  education_downsample_n: 5000      # education 保留数量(原始 24,731)
+
+tier3:
+  # 规则标签(有噪声)
+  hotel_include: true               # hotel 全量纳入(6,664 栋)
+  sports_include: true              # sport_culture bundled 全量纳入(6,107 栋)
+  mall_include: false               # 禁用: 规则弱标签
+  culture_include: false            # 禁用: 准确率仅 37%
+  mixed_use_include: false          # 禁用: 规则弱标签
+
+features:
+  neighborhood_radius_m: 100
+  aspect_ratio_min_side_m: 0.5
+  no_neighbor_fill: 0.0
+  supertall_floors_impute: "median_matched_supertall"
+
+cv:
+  grid_deg: 0.01                    # 空间分组网格精度(~1.1km 纬度方向)
+  n_splits: 5
+
+smote:
+  k_neighbors: 5
+  fallback_min_samples: 6          # 低于此数 fallback 到 RandomOverSampler
+
+models:
+  rf:
+    n_estimators: 500
+    max_depth: 20
+    min_samples_split: 10
+    min_samples_leaf: 4
+    class_weight: "balanced"
+    n_jobs: -1
+  xgb:
+    n_estimators: 500
+    max_depth: 6
+    learning_rate: 0.1
+    subsample: 0.8
+    colsample_bytree: 0.8
+    use_label_encoder: false
+    eval_metric: "mlogloss"
+    n_jobs: -1
+    verbosity: 0
+  cat:
+    iterations: 500
+    depth: 6
+    learning_rate: 0.1
+    verbose: 0
+    random_seed: 42                 # catboost uses random_seed, not random_state
+
+tuning:
+  # Grid search 空间(Step 3, 沿用 Yuqian Table 3 + 扩展)
+  # 选择标准: CV 分数方差最小的组合(不是准确率最高的)
+  rf:
+    n_estimators: [500]
+    max_depth: [10, 15, 20, 30, 50]
+    min_samples_split: [5, 10, 15, 20]
+    min_samples_leaf: [2, 4, 6]
+  xgb:
+    n_estimators: [500]
+    max_depth: [4, 6, 8]
+    learning_rate: [0.05, 0.1, 0.2]
+    subsample: [0.7, 0.8, 0.9]
+  cat:
+    iterations: [500]
+    depth: [4, 6, 8]
+    learning_rate: [0.05, 0.1, 0.2]
+
+prediction:
+  # Step 4: 全量预测
+  min_probability_threshold: 0.0   # 低于此置信度的预测标记 low_confidence
+  output_parquet: "b3_citywide_predictions.parquet"
+  output_model: "b3_best_model.joblib"
+
+evaluation:
+  bootstrap_n: 5000
+  feature_importance_top_n: 10
+
+output:
+  figures_dir: "outputs/figures/module_b"
+  tables_dir: "data/reference"
